@@ -1,0 +1,27 @@
+<?php
+namespace App\Controllers\Admin;
+
+use App\Core\Controller;
+use App\Models\Poli;
+use App\Models\Queue;
+
+class LoketController extends Controller
+{
+    public function index(): void
+    {
+        $staff = $this->session->staff();
+        $polis = Poli::all(true);
+        $selectedPoliId = (int)$this->request->get('poli_id', $polis[0]['id'] ?? 0);
+
+        $current  = Queue::currentForPoli($selectedPoliId);
+        $waitList = Queue::waitListByPoli($selectedPoliId);
+        $recent   = Queue::recentForPoli($selectedPoliId, 8);
+
+        $this->view('admin/loket', compact('staff','polis','selectedPoliId','current','waitList','recent'), 'admin', [
+            'activePage' => 'loket',
+            'pageTitle'  => 'Loket <em>Pemanggilan</em>',
+            'pageSub'    => 'Pasien hari ini · ' . count($waitList) . ' menunggu',
+            'staff'      => $staff,
+        ]);
+    }
+}
