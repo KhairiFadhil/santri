@@ -1,20 +1,199 @@
 <?php
-namespace App\Controllers;
+
+namespace App\Controllers\Admin;
 
 use App\Core\View;
+use App\Model\Dokter;
+use App\Model\Poli;
 
-class ProfileController
+class WalkinController
 {
+    private const BASE = '/santri-belajar/public';
+
     public function index(): void
     {
-        View::render('profile/index', [], 'main');
+        View::render('admin/walkin/index', [
+            'errors' => [],
+            'form' => $this->emptyForm(),
+            'doctors' => Dokter::all(true),
+            'poli' => Poli::all(true),
+        ], 'main');
     }
 
-    public function update(): void
+    public function store(): void
     {
+        $form = $this->formFromPost();
+        $errors = $this->validate($form);
+        $dokter = null;
+
+        if (!$errors) {
+            $dokter = Dokter::findById((int)$form['doctor_id']);
+            if (!$dokter) {
+                $errors[] = 'Dokter tidak ditemukan.';
+            }
+        }
+
+        if ($errors) {
+            View::render('admin/walkin/index', [
+                'errors' => $errors,
+                'form' => $form,
+                'doctors' => Dokter::all(true),
+                'poli' => Poli::all(true),
+            ], 'main');
+            return;
+        }
+
+        try {
+            $queue = $this->createQueue([
+                'walkin_name' => $form['walkin_name'],
+                'walkin_nik' => $form['walkin_nik'] ?: null,
+                'walkin_phone' => $form['walkin_phone'] ?: null,
+                'doctor_id' => (int)$form['doctor_id'],
+                'poli_id' => (int)$dokter['poli_id'],
+                'schedule_date' => $form['schedule_date'],
+                'schedule_time' => $form['schedule_time'] ?: null,
+                'complaint' => $form['complaint'] ?: null,
+                'insurance_type' => $form['insurance_type'] ?: 'Umum',
+            ]);
+
+            $_SESSION['flash'] = [
+                'kind' => 'ok',
+                'message' => 'Antrean walk-in berhasil dibuat: ' . $queue['ticket_code'],
+            ];
+
+            $this->redirect('/admin/walkin');
+        } catch (\Throwable $e) {
+            View::render('admin/walkin/index', [
+                'errors' => [$e->getMessage()],
+                'form' => $form,
+                'doctors' => Dokter::all(true),
+                'poli' => Poli::all(true),
+            ], 'main');
+        }
     }
 
-    public function changePassword(): void
+    private function createQueue(array $data): array
     {
+        $pdo = db();
+        $poli = Poli::findById((int)$data['poli_id']);
+
+        if (!$poli) {
+            throw new \RuntimeException('Poli tidak ditemukan.');
+        }
+
+        $date = $data['schedule_date'];
+        $pdo->beginTransaction();
+
+        try {
+            $st = $pdo->prepare('SELECT last_number FROM queue_counters WHERE poli_id = ? AND counter_date = ? FOR UPDATE');
+            $st->execute([(int)$data['poli_id'], $date]);
+            $last = $st->fetchColumn();
+
+            if ($last === false) {
+                $pdo->prepare('INSERT INTO queue_counters (poli_id, counter_date, last_number) VALUES (?, ?, 0)')
+                    ->execute([(int)$data['poli_id'], $date]);
+                $last = 0;
+            }
+
+            $next = (int)$last + 1;
+            $ticketCode = $poli['code'] . '-' . str_pad((string)$next, 3, '0', STR_PAD_LEFT);
+
+            $pdo->prepare('UPDATE queue_counters SET last_number = ? WHERE poli_id = ? AND counter_date = ?')
+                ->execute([$next, (int)$data['poli_id'], $date]);
+
+            $sql = 'INSERT INTO queues
+                    (ticket_code, prefix, number, user_id, walkin_name, walkin_nik, walkin_phone,
+                     doctor_id, poli_id, schedule_date, schedule_time, complaint, status, insurance_type, registered_via, handled_by)
+                    VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+
+            $pdo->prepare($sql)->execute([
+                $ticketCode,
+                $poli['code'],
+                $next,
+                $data['walkin_name'],
+                $data['walkin_nik'],
+                $data['walkin_phone'],
+                (int)$data['doctor_id'],
+                (int)$data['poli_id'],
+                $date,
+                $data['schedule_time'],
+                $data['complaint'],
+                'wait',
+                $data['insurance_type'],
+                'walkin',
+                $_SESSION['staff']['id'] ?? null,
+            ]);
+
+            $id = (int)$pdo->lastInsertId();
+            $pdo->commit();
+
+            $st = db()->prepare('SELECT * FROM queues WHERE id = ?');
+            $st->execute([$id]);
+            return $st->fetch() ?: ['ticket_code' => $ticketCode];
+        } catch (\Throwable $e) {
+            $pdo->rollBack();
+            throw $e;
+        }
+    }
+
+    private function emptyForm(): array
+    {
+        return [
+            'walkin_name' => '',
+            'walkin_nik' => '',
+            'walkin_phone' => '',
+            'doctor_id' => '',
+            'schedule_date' => date('Y-m-d'),
+            'schedule_time' => '',
+            'complaint' => '',
+            'insurance_type' => 'Umum',
+        ];
+    }
+
+    private function formFromPost(): array
+    {
+        return [
+            'walkin_name' => trim($_POST['walkin_name'] ?? $_POST['name'] ?? ''),
+            'walkin_nik' => trim($_POST['walkin_nik'] ?? $_POST['nik'] ?? ''),
+            'walkin_phone' => trim($_POST['walkin_phone'] ?? $_POST['phone'] ?? ''),
+            'doctor_id' => trim($_POST['doctor_id'] ?? ''),
+            'schedule_date' => trim($_POST['schedule_date'] ?? date('Y-m-d')),
+            'schedule_time' => trim($_POST['schedule_time'] ?? ''),
+            'complaint' => trim($_POST['complaint'] ?? ''),
+            'insurance_type' => trim($_POST['insurance_type'] ?? 'Umum'),
+        ];
+    }
+
+    private function validate(array $form): array
+    {
+        $errors = [];
+
+        if ($form['walkin_name'] === '') {
+            $errors[] = 'Nama pasien wajib diisi.';
+        }
+
+        if ($form['walkin_nik'] !== '' && !preg_match('/^\d{16}$/', $form['walkin_nik'])) {
+            $errors[] = 'NIK harus 16 digit angka.';
+        }
+
+        if ((int)$form['doctor_id'] <= 0) {
+            $errors[] = 'Dokter wajib dipilih.';
+        }
+
+        if ($form['schedule_date'] === '') {
+            $errors[] = 'Tanggal antrean wajib diisi.';
+        }
+
+        if (!in_array($form['insurance_type'], ['BPJS', 'Asuransi', 'Umum'], true)) {
+            $errors[] = 'Jenis penjamin tidak valid.';
+        }
+
+        return $errors;
+    }
+
+    private function redirect(string $path): void
+    {
+        header('Location: ' . self::BASE . $path);
+        exit;
     }
 }
