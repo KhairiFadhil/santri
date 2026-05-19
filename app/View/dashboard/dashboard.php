@@ -11,4 +11,11 @@
     <li>NIK: <?= htmlspecialchars($user['nik']) ?></li>
 </ul>
 
-<p><a href="/santri-belajar/public/logout">Keluar</a></p>
+<h2>Menu</h2>
+<ul>
+    <li><a href="/santri-belajar/public/daftar">Daftar Antrean</a></li>
+    <li><a href="/santri-belajar/public/antrean">Antrean Saya</a></li>
+    <li><a href="/santri-belajar/public/riwayat">Riwayat Antrean</a></li>
+    <li><a href="/santri-belajar/public/profile">Profil</a></li>
+    <li><a href="/santri-belajar/public/logout">Keluar</a></li>
+</ul>

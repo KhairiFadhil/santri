@@ -15,8 +15,6 @@
   <body>
       <nav>
           <a href="/santri-belajar/public/">Beranda</a>
-          <a href="/santri-belajar/public/about">Tentang</a>
-          <a href="/santri-belajar/public/faq">Bantuan</a>
           <a href="/santri-belajar/public/login">Masuk</a>
           <a href="/santri-belajar/public/register">Daftar</a>
       </nav>
