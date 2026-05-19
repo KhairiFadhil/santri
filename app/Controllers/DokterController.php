@@ -15,7 +15,7 @@
                 return;
             }
 
-            View::render('dokter_detail', ['dokter' => $dokter]);
+            View::render('dokter/detail', ['dokter' => $dokter], 'main');
         }
     }
 

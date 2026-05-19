@@ -58,7 +58,7 @@ class Antrian {
           $date     = $data['schedule_date'] ?? date('Y-m-d');
           $time     = $data['schedule_time'] ?? null;
           if (!empty($data['user_id'])) {
-              if (self::activeForUser((int)$data['user_id'])) {
+              if (self::getAntrianAktif((int)$data['user_id'])) {
                   throw new RuntimeException('Anda sudah punya antrean aktif.');
               }
           }
