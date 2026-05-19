@@ -18,7 +18,7 @@
         {
             $file = __DIR__ . '/../View/' . $name . '.php';
             if(!file_exists($file)){
-                throw new \RuntimeException("View tidak ada: ${name}");
+                throw new \RuntimeException("View tidak ada: {$name}");
             }
 
             extract($data, EXTR_SKIP);

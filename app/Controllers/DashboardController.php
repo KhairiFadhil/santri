@@ -10,21 +10,15 @@ class DashboardController
 {
     public function index()
     {
+        // Proteksi: hanya untuk user yang sudah login
         if (!isset($_SESSION['user'])) {
-            header('Location: /login');
+            header('Location: /santri-belajar/public/login');
             exit;
         }
 
-        $antrianModel = new Antrian();
-        $dokterModel = new Dokter();
-
-        $data = [
-            'title' => 'Dashboard Utama',
-            'user' => $_SESSION['user'],
-            'total_antrian' => method_exists($antrianModel, 'countAll') ? $antrianModel->countAll() : 0,
-            'total_dokter' => method_exists($dokterModel, 'countAll') ? $dokterModel->countAll() : 0
-        ];
-
-        return View::render('dashboard', $data, 'main');
+        View::render('dashboard/dashboard', [
+            'title' => 'Dashboard',
+            'user'  => $_SESSION['user'],
+        ], 'main');
     }
 }
