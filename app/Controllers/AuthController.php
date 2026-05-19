@@ -8,11 +8,6 @@ class AuthController
 {
     public function showLogin(): void
     {
-        if (isset($_SESSION['user'])) {
-            header('Location: /santri-belajar/public/dashboard');
-            exit;
-        }
-
         View::render('auth/login', [
             'error' => '',
             'email' => '',
@@ -56,11 +51,6 @@ class AuthController
 
     public function showRegister(): void
     {
-        if (isset($_SESSION['user'])) {
-            header('Location: /santri-belajar/public/dashboard');
-            exit;
-        }
-
         View::render('auth/register', [
             'errors' => [],
             'form'   => $this->emptyForm(),
