@@ -32,10 +32,10 @@ class Middleware
                 break;
 
             case 'dokter':
-                // TODO: cek dua hal:
-                //   1. ada $_SESSION['staff'] (artinya login sebagai staff)
-                //   2. $_SESSION['staff']['role'] harus 'dokter'
-                // kalau ga lolos, redirect ke /santri-belajar/public/admin/login + exit
+                if (!isset($_SESSION['staff']) || ($_SESSION['staff']['role'] ?? '') !== 'dokter') {
+                    header('Location: /santri-belajar/public/admin/login');
+                    exit;
+                }
                 break;
         }
     }
