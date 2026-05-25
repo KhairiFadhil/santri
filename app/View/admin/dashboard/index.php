@@ -74,8 +74,5 @@
     <li><a href="/santri-belajar/public/admin/dokter">Kelola Dokter (<?= count($dokter) ?>)</a></li>
     <li><a href="/santri-belajar/public/admin/jadwal">Jadwal Dokter</a></li>
     <li><a href="/santri-belajar/public/admin/pasien">Database Pasien</a></li>
-    <li><a href="/santri-belajar/public/admin/laporan">Laporan &amp; Analitik</a></li>
-    <li><a href="/santri-belajar/public/admin/petugas">Pengguna &amp; Petugas (<?= count($staff) ?>)</a></li>
-    <li><a href="/santri-belajar/public/admin/pengaturan">Pengaturan</a></li>
     <li><a href="/santri-belajar/public/admin/logout">Keluar</a></li>
 </ul>

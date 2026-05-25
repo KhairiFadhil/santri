@@ -2,6 +2,7 @@
     session_start();
 
     require __DIR__ . "/../app/Core/AutoLoader.php";
+    require __DIR__ . '/../config/app.php';
     require __DIR__ . '/../config/database.php';
 
     $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -33,19 +34,15 @@
         'POST /profile'          => ['App\Controllers\ProfileController', 'update', 'auth'],
         'POST /profile/password' => ['App\Controllers\ProfileController', 'changePassword', 'auth'],
 
-        'GET /poli/{id}'   => ['App\Controllers\PoliController', 'detail'],
-        'GET /dokter/{id}' => ['App\Controllers\DokterController', 'detail'],
+        'GET /api/queue/status' => ['App\Controllers\Api\QueueController', 'status', 'auth'],
+        'GET /api/queue/live'   => ['App\Controllers\Api\QueueController', 'live'],
 
         'GET /admin/login'  => ['App\Controllers\Admin\AuthController', 'showLogin', 'guest'],
         'POST /admin/login' => ['App\Controllers\Admin\AuthController', 'login',     'guest'],
         'GET /admin/logout' => ['App\Controllers\Admin\AuthController', 'logout'],
 
-        'GET /admin'                 => ['App\Controllers\Admin\DashboardController', 'index', 'staff'],
-        'GET /admin/loket'           => ['App\Controllers\Admin\LoketController', 'index', 'staff'],
-        'POST /admin/loket/call'     => ['App\Controllers\Admin\LoketController', 'call', 'staff'],
-        'POST /admin/loket/skip'     => ['App\Controllers\Admin\LoketController', 'skip', 'staff'],
-        'POST /admin/loket/progress' => ['App\Controllers\Admin\LoketController', 'progress', 'staff'],
-        'POST /admin/loket/done'     => ['App\Controllers\Admin\LoketController', 'done', 'staff'],
+        'GET /admin'       => ['App\Controllers\Admin\DashboardController', 'index', 'staff'],
+        'GET /admin/loket' => ['App\Controllers\Admin\LoketController', 'index', 'staff'],
 
         'GET /admin/antrean' => ['App\Controllers\Admin\AntreanController', 'index', 'staff'],
 
@@ -73,17 +70,13 @@
         'GET /admin/pasien'              => ['App\Controllers\Admin\PasienController', 'index', 'staff'],
         'POST /admin/pasien/{id}/delete' => ['App\Controllers\Admin\PasienController', 'delete', 'staff'],
 
-        'GET /admin/laporan' => ['App\Controllers\Admin\LaporanController', 'index', 'staff'],
+        'GET /dokter/loket'                 => ['App\Controllers\Dokter\LoketController', 'index',       'dokter'],
+        'POST /dokter/loket/{id}/call'      => ['App\Controllers\Dokter\LoketController', 'call',        'dokter'],
+        'POST /dokter/loket/{id}/progress'  => ['App\Controllers\Dokter\LoketController', 'progress',    'dokter'],
+        'POST /dokter/loket/{id}/done'      => ['App\Controllers\Dokter\LoketController', 'done',        'dokter'],
+        'POST /dokter/loket/{id}/skip'      => ['App\Controllers\Dokter\LoketController', 'skip',        'dokter'],
+        'POST /dokter/loket/{id}/done-next' => ['App\Controllers\Dokter\LoketController', 'doneAndNext', 'dokter'],
 
-        'GET /admin/petugas'              => ['App\Controllers\Admin\PetugasController', 'index', 'staff'],
-        'GET /admin/petugas/create'       => ['App\Controllers\Admin\PetugasController', 'create', 'staff'],
-        'POST /admin/petugas'             => ['App\Controllers\Admin\PetugasController', 'store', 'staff'],
-        'GET /admin/petugas/{id}/edit'    => ['App\Controllers\Admin\PetugasController', 'edit', 'staff'],
-        'POST /admin/petugas/{id}'        => ['App\Controllers\Admin\PetugasController', 'update', 'staff'],
-        'POST /admin/petugas/{id}/delete' => ['App\Controllers\Admin\PetugasController', 'delete', 'staff'],
-
-        'GET /admin/pengaturan'  => ['App\Controllers\Admin\PengaturanController', 'index', 'staff'],
-        'POST /admin/pengaturan' => ['App\Controllers\Admin\PengaturanController', 'save', 'staff'],
     ];
 
     $matched = null;

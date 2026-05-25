@@ -112,11 +112,10 @@ class PoliController
     private function emptyForm(): array
     {
         return [
-            'code' => '',
-            'name' => '',
-            'sub' => '',
-            'icon' => 'Stethoscope',
-            'capacity_daily' => 50,
+            'code'    => '',
+            'name'    => '',
+            'sub'     => '',
+            'icon'    => 'Stethoscope',
             'is_open' => 1,
         ];
     }
@@ -124,11 +123,10 @@ class PoliController
     private function formFromPost(): array
     {
         return [
-            'code' => strtoupper(substr(trim($_POST['code'] ?? ''), 0, 3)),
-            'name' => trim($_POST['name'] ?? ''),
-            'sub' => trim($_POST['sub'] ?? ''),
-            'icon' => trim($_POST['icon'] ?? 'Stethoscope'),
-            'capacity_daily' => (int)($_POST['capacity_daily'] ?? 50),
+            'code'    => strtoupper(substr(trim($_POST['code'] ?? ''), 0, 3)),
+            'name'    => trim($_POST['name'] ?? ''),
+            'sub'     => trim($_POST['sub'] ?? ''),
+            'icon'    => trim($_POST['icon'] ?? 'Stethoscope'),
             'is_open' => isset($_POST['is_open']) ? 1 : 0,
         ];
     }
@@ -136,19 +134,12 @@ class PoliController
     private function validate(array $form): array
     {
         $errors = [];
-
         if (!preg_match('/^[A-Z]{1,3}$/', $form['code'])) {
             $errors[] = 'Kode poli wajib 1 sampai 3 huruf kapital.';
         }
-
         if ($form['name'] === '') {
             $errors[] = 'Nama poli wajib diisi.';
         }
-
-        if ($form['capacity_daily'] < 1) {
-            $errors[] = 'Kapasitas harian minimal 1.';
-        }
-
         return $errors;
     }
 

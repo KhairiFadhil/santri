@@ -19,7 +19,7 @@
         <tbody>
             <?php foreach ($rows as $r): ?>
                 <tr>
-                    <td><?= htmlspecialchars($r['schedule_date']) ?></td>
+                    <td><?= htmlspecialchars(format_tanggal_id($r['schedule_date'])) ?></td>
                     <td><?= htmlspecialchars($r['ticket_code']) ?></td>
                     <td><?= htmlspecialchars($r['poli_name']) ?></td>
                     <td><?= htmlspecialchars($r['doctor_name']) ?></td>

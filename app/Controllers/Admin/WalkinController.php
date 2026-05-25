@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Core\View;
+use App\Model\Antrian;
 use App\Model\Dokter;
 use App\Model\Poli;
 
@@ -44,16 +45,18 @@ class WalkinController
         }
 
         try {
-            $queue = $this->createQueue([
-                'walkin_name' => $form['walkin_name'],
-                'walkin_nik' => $form['walkin_nik'] ?: null,
-                'walkin_phone' => $form['walkin_phone'] ?: null,
-                'doctor_id' => (int)$form['doctor_id'],
-                'poli_id' => (int)$dokter['poli_id'],
-                'schedule_date' => $form['schedule_date'],
-                'schedule_time' => $form['schedule_time'] ?: null,
-                'complaint' => $form['complaint'] ?: null,
+            $queue = Antrian::create([
+                'walkin_name'    => $form['walkin_name'],
+                'walkin_nik'     => $form['walkin_nik'] ?: null,
+                'walkin_phone'   => $form['walkin_phone'] ?: null,
+                'doctor_id'      => (int)$form['doctor_id'],
+                'poli_id'        => (int)$dokter['poli_id'],
+                'schedule_date'  => $form['schedule_date'],
+                'schedule_time'  => $form['schedule_time'] ?: null,
+                'complaint'      => $form['complaint'] ?: null,
                 'insurance_type' => $form['insurance_type'] ?: 'Umum',
+                'registered_via' => 'walkin',
+                'handled_by'     => $_SESSION['staff']['id'] ?? null,
             ]);
 
             $_SESSION['flash'] = [
@@ -69,70 +72,6 @@ class WalkinController
                 'doctors' => Dokter::all(true),
                 'poli' => Poli::all(true),
             ], 'main');
-        }
-    }
-
-    private function createQueue(array $data): array
-    {
-        $pdo = db();
-        $poli = Poli::findById((int)$data['poli_id']);
-
-        if (!$poli) {
-            throw new \RuntimeException('Poli tidak ditemukan.');
-        }
-
-        $date = $data['schedule_date'];
-        $pdo->beginTransaction();
-
-        try {
-            $st = $pdo->prepare('SELECT last_number FROM queue_counters WHERE poli_id = ? AND counter_date = ? FOR UPDATE');
-            $st->execute([(int)$data['poli_id'], $date]);
-            $last = $st->fetchColumn();
-
-            if ($last === false) {
-                $pdo->prepare('INSERT INTO queue_counters (poli_id, counter_date, last_number) VALUES (?, ?, 0)')
-                    ->execute([(int)$data['poli_id'], $date]);
-                $last = 0;
-            }
-
-            $next = (int)$last + 1;
-            $ticketCode = $poli['code'] . '-' . str_pad((string)$next, 3, '0', STR_PAD_LEFT);
-
-            $pdo->prepare('UPDATE queue_counters SET last_number = ? WHERE poli_id = ? AND counter_date = ?')
-                ->execute([$next, (int)$data['poli_id'], $date]);
-
-            $sql = 'INSERT INTO queues
-                    (ticket_code, prefix, number, user_id, walkin_name, walkin_nik, walkin_phone,
-                     doctor_id, poli_id, schedule_date, schedule_time, complaint, status, insurance_type, registered_via, handled_by)
-                    VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-
-            $pdo->prepare($sql)->execute([
-                $ticketCode,
-                $poli['code'],
-                $next,
-                $data['walkin_name'],
-                $data['walkin_nik'],
-                $data['walkin_phone'],
-                (int)$data['doctor_id'],
-                (int)$data['poli_id'],
-                $date,
-                $data['schedule_time'],
-                $data['complaint'],
-                'wait',
-                $data['insurance_type'],
-                'walkin',
-                $_SESSION['staff']['id'] ?? null,
-            ]);
-
-            $id = (int)$pdo->lastInsertId();
-            $pdo->commit();
-
-            $st = db()->prepare('SELECT * FROM queues WHERE id = ?');
-            $st->execute([$id]);
-            return $st->fetch() ?: ['ticket_code' => $ticketCode];
-        } catch (\Throwable $e) {
-            $pdo->rollBack();
-            throw $e;
         }
     }
 

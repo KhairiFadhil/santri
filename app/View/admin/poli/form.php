@@ -32,10 +32,6 @@ $action = $isEdit ? $base . '/admin/poli/' . ($form['id'] ?? '') : $base . '/adm
         <input type="text" name="icon" value="<?= htmlspecialchars($form['icon'] ?? 'Stethoscope') ?>">
     </p>
     <p>
-        <label>Kapasitas Harian</label><br>
-        <input type="number" name="capacity_daily" value="<?= htmlspecialchars((string)($form['capacity_daily'] ?? 50)) ?>" min="1">
-    </p>
-    <p>
         <label>
             <input type="checkbox" name="is_open" value="1" <?= !empty($form['is_open']) ? 'checked' : '' ?>>
             Poli buka

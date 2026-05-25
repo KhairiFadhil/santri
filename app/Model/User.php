@@ -66,8 +66,8 @@ class User
           $hash = password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 12]);
           $sql = 'INSERT INTO users
                   (nik, name, email, password_hash, phone, birth, gender,
-                   address, blood_type, insurance_type, insurance_no, insurance_class)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                   address, insurance_type, insurance_no)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
           $st = db()->prepare($sql);
           $st->execute([
               $data['nik'],
@@ -78,18 +78,16 @@ class User
               $data['birth'] ?? null,
               $data['gender'] ?? null,
               $data['address'] ?? null,
-              $data['blood_type'] ?? null,
               $data['insurance_type'] ?? 'Umum',
               $data['insurance_no'] ?? null,
-              $data['insurance_class'] ?? null,
           ]);
           return (int)db()->lastInsertId();
       }
 
       public static function update(int $id, array $data): bool
       {
-          $allowed = ['name','phone','birth','gender','address','blood_type',
-                      'insurance_type','insurance_no','insurance_class','email','nik'];
+          $allowed = ['name','phone','birth','gender','address',
+                      'insurance_type','insurance_no','email','nik'];
           $sets = [];
           $params = [];
           foreach ($allowed as $col) {

@@ -1,6 +1,25 @@
-<?php /** @var array $doctors */ /** @var array $errors */ /** @var array $form */ ?>
+<?php
+/** @var array $doctors */
+/** @var array $errors */
+/** @var array $form */
+/** @var string $hari */
+?>
 
 <h1>Daftar Antrean</h1>
+
+<form method="GET" action="/santri-belajar/public/daftar">
+    <p>
+        <label>Pilih Tanggal Kunjungan (max 3 hari ke depan):
+            <input type="date" name="schedule_date"
+                   value="<?= htmlspecialchars($form['schedule_date']) ?>"
+                   min="<?= date('Y-m-d') ?>"
+                   max="<?= date('Y-m-d', strtotime('+3 days')) ?>"
+                   onchange="this.form.submit()">
+        </label>
+    </p>
+</form>
+
+<p>Tanggal: <strong><?= htmlspecialchars(format_tanggal_id($form['schedule_date'])) ?></strong></p>
 
 <?php if (!empty($errors)): ?>
     <ul style="color: red;">
@@ -10,41 +29,52 @@
     </ul>
 <?php endif; ?>
 
-<form method="POST" action="/santri-belajar/public/daftar">
-    <p>
-        <label>Pilih Dokter:<br>
-            <select name="doctor_id" required>
-                <option value="">-- pilih dokter --</option>
+<?php if (empty($doctors)): ?>
+    <p>Tidak ada dokter yang praktik di hari <?= htmlspecialchars($hari) ?>. Silakan pilih tanggal lain.</p>
+<?php else: ?>
+    <h2>Dokter yang Praktik</h2>
+    <p><em>Pilih salah satu dokter di bawah:</em></p>
+
+    <form method="POST" action="/santri-belajar/public/daftar">
+        <input type="hidden" name="schedule_date" value="<?= htmlspecialchars($form['schedule_date']) ?>">
+
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Pilih</th>
+                    <th>Dokter</th>
+                    <th>Poli</th>
+                    <th>Jam Praktik</th>
+                </tr>
+            </thead>
+            <tbody>
                 <?php foreach ($doctors as $d): ?>
-                    <option value="<?= $d['id'] ?>" <?= $form['doctor_id']==$d['id']?'selected':'' ?>>
-                        <?= htmlspecialchars($d['name']) ?> — <?= htmlspecialchars($d['poli_name']) ?>
-                    </option>
+                    <tr>
+                        <td>
+                            <input type="radio" name="doctor_id" value="<?= $d['id'] ?>"
+                                   <?= $form['doctor_id']==$d['id']?'checked':'' ?> required>
+                        </td>
+                        <td>
+                            <strong><?= htmlspecialchars($d['name']) ?></strong><br>
+                            <small><?= htmlspecialchars($d['specialization']) ?></small>
+                        </td>
+                        <td><?= htmlspecialchars($d['poli_name']) ?></td>
+                        <td><?= substr($d['time_start'], 0, 5) ?> – <?= substr($d['time_end'], 0, 5) ?></td>
+                    </tr>
                 <?php endforeach; ?>
-            </select>
-        </label>
-    </p>
+            </tbody>
+        </table>
 
-    <p>
-        <label>Tanggal:<br>
-            <input type="date" name="schedule_date" value="<?= htmlspecialchars($form['schedule_date']) ?>" required>
-        </label>
-    </p>
+        <p>
+            <label>Keluhan (opsional):<br>
+                <textarea name="complaint" rows="3" cols="40"><?= htmlspecialchars($form['complaint']) ?></textarea>
+            </label>
+        </p>
 
-    <p>
-        <label>Jam:<br>
-            <input type="time" name="schedule_time" value="<?= htmlspecialchars($form['schedule_time']) ?>" required>
-        </label>
-    </p>
-
-    <p>
-        <label>Keluhan (opsional):<br>
-            <textarea name="complaint" rows="3" cols="40"><?= htmlspecialchars($form['complaint']) ?></textarea>
-        </label>
-    </p>
-
-    <p>
-        <button type="submit">Ambil Nomor Antrean</button>
-    </p>
-</form>
+        <p>
+            <button type="submit">Ambil Nomor Antrean</button>
+        </p>
+    </form>
+<?php endif; ?>
 
 <p><a href="/santri-belajar/public/dashboard">← Kembali ke dashboard</a></p>

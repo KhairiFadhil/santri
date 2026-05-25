@@ -10,7 +10,6 @@
         <th>Kode</th>
         <th>Nama Poli</th>
         <th>Keterangan</th>
-        <th>Kapasitas</th>
         <th>Status</th>
         <th>Aksi</th>
     </tr>
@@ -20,7 +19,6 @@
             <td><?= htmlspecialchars($row['code'] ?? '') ?></td>
             <td><?= htmlspecialchars($row['name'] ?? '') ?></td>
             <td><?= htmlspecialchars($row['sub'] ?? '') ?></td>
-            <td><?= htmlspecialchars((string)($row['capacity_daily'] ?? '')) ?></td>
             <td><?= !empty($row['is_open']) ? 'Buka' : 'Tutup' ?></td>
             <td>
                 <a href="<?= $base ?>/admin/poli/<?= $row['id'] ?>/edit">Edit</a>

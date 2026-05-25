@@ -43,13 +43,16 @@ class AuthController
         session_regenerate_id(true);
 
         $_SESSION['staff'] = [
-            'id' => (int)$staff['id'],
-            'name' => $staff['name'],
+            'id'    => (int)$staff['id'],
+            'name'  => $staff['name'],
             'email' => $staff['email'],
-            'role' => $staff['role'],
-            'loket' => $staff['loket'] ?? null,
-            'shift' => $staff['shift'] ?? null,
+            'role'  => $staff['role'],
+            'doctor_id' => isset($staff['doctor_id']) ? (int)$staff['doctor_id'] : null,
         ];
+        if ($staff['role'] === 'dokter') {
+            $this->redirect('/dokter/loket');
+            return;
+        }
 
         $this->redirect('/admin');
     }
