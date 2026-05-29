@@ -3,43 +3,44 @@
 /** @var array $antrean */
 /** @var array $poli */
 /** @var array $dokter */
-/** @var array $staff */
-/** @var array $pasien */
+$base = BASE_URL;
 ?>
 
-<h1>Dashboard Admin</h1>
+<div class="section-header">
+    <div>
+        <h1>Dashboard Admin</h1>
+        <p class="page-title-note">Ringkasan data poli, dokter, pasien, dan antrean hari ini.</p>
+    </div>
+    <div class="section-actions">
+        <a class="button" href="<?= $base ?>/admin/loket">Buka Loket</a>
+        <a class="btn-secondary" href="<?= $base ?>/admin/walkin">Pendaftaran Walk-in</a>
+    </div>
+</div>
 
-<h2>Statistik</h2>
-<table border="1" cellpadding="6" cellspacing="0">
-    <tr><th>Total Poli</th><td><?= $stats['poli'] ?></td>
-        <th>Poli Buka</th><td><?= $stats['poli_buka'] ?></td></tr>
-    <tr><th>Dokter Aktif</th><td><?= $stats['dokter_aktif'] ?></td>
-        <th>Total Pasien</th><td><?= $stats['pasien'] ?></td></tr>
-    <tr><th>Total Petugas</th><td><?= $stats['petugas'] ?></td>
-        <th>Antrean Hari Ini</th><td><?= $stats['antrean_hari_ini'] ?></td></tr>
-</table>
+<div class="stats-grid">
+    <div class="stat-card"><span>Total Poli</span><strong><?= $stats['poli'] ?></strong></div>
+    <div class="stat-card"><span>Poli Buka</span><strong><?= $stats['poli_buka'] ?></strong></div>
+    <div class="stat-card"><span>Dokter Aktif</span><strong><?= $stats['dokter_aktif'] ?></strong></div>
+    <div class="stat-card"><span>Total Pasien</span><strong><?= $stats['pasien'] ?></strong></div>
+    <div class="stat-card"><span>Total Petugas</span><strong><?= $stats['petugas'] ?></strong></div>
+    <div class="stat-card"><span>Antrean Hari Ini</span><strong><?= $stats['antrean_hari_ini'] ?></strong></div>
+</div>
 
 <h2>Status Antrean Hari Ini</h2>
-<table border="1" cellpadding="6" cellspacing="0">
-    <tr>
-        <th>Menunggu</th><th>Dipanggil</th><th>Diproses</th>
-        <th>Selesai</th><th>Dilewati</th><th>Batal</th>
-    </tr>
-    <tr>
-        <td><?= $stats['menunggu'] ?></td>
-        <td><?= $stats['dipanggil'] ?></td>
-        <td><?= $stats['diproses'] ?></td>
-        <td><?= $stats['selesai'] ?></td>
-        <td><?= $stats['dilewati'] ?></td>
-        <td><?= $stats['batal'] ?></td>
-    </tr>
-</table>
+<div class="stats-grid">
+    <div class="stat-card"><span>Menunggu</span><strong><?= $stats['menunggu'] ?></strong></div>
+    <div class="stat-card"><span>Dipanggil</span><strong><?= $stats['dipanggil'] ?></strong></div>
+    <div class="stat-card"><span>Diproses</span><strong><?= $stats['diproses'] ?></strong></div>
+    <div class="stat-card"><span>Selesai</span><strong><?= $stats['selesai'] ?></strong></div>
+    <div class="stat-card"><span>Dilewati</span><strong><?= $stats['dilewati'] ?></strong></div>
+    <div class="stat-card"><span>Batal</span><strong><?= $stats['batal'] ?></strong></div>
+</div>
 
 <h2>Antrean Hari Ini (<?= count($antrean) ?>)</h2>
 <?php if (empty($antrean)): ?>
-    <p>Belum ada antrean hari ini.</p>
+    <div class="empty-state">Belum ada antrean hari ini.</div>
 <?php else: ?>
-    <table border="1" cellpadding="6" cellspacing="0">
+    <table>
         <thead>
             <tr>
                 <th>Nomor</th>
@@ -53,12 +54,12 @@
         <tbody>
             <?php foreach ($antrean as $a): ?>
                 <tr>
-                    <td><?= htmlspecialchars($a['ticket_code']) ?></td>
+                    <td><strong><?= htmlspecialchars($a['ticket_code']) ?></strong></td>
                     <td><?= htmlspecialchars($a['patient_name'] ?? '-') ?></td>
                     <td><?= htmlspecialchars($a['poli_name']) ?></td>
                     <td><?= htmlspecialchars($a['doctor_name']) ?></td>
-                    <td><?= htmlspecialchars($a['schedule_time'] ?? '-') ?></td>
-                    <td><strong><?= htmlspecialchars(strtoupper($a['status'])) ?></strong></td>
+                    <td><?= htmlspecialchars(substr($a['schedule_time'] ?? '-', 0, 5)) ?></td>
+                    <td><span class="badge"><?= htmlspecialchars(strtoupper($a['status'])) ?></span></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
@@ -66,13 +67,12 @@
 <?php endif; ?>
 
 <h2>Menu Admin</h2>
-<ul>
-    <li><a href="/santri-belajar/public/admin/loket">Loket Pemanggilan</a></li>
-    <li><a href="/santri-belajar/public/admin/antrean">Manajemen Antrean</a></li>
-    <li><a href="/santri-belajar/public/admin/walkin">Pendaftaran Walk-in</a></li>
-    <li><a href="/santri-belajar/public/admin/poli">Kelola Poli (<?= count($poli) ?>)</a></li>
-    <li><a href="/santri-belajar/public/admin/dokter">Kelola Dokter (<?= count($dokter) ?>)</a></li>
-    <li><a href="/santri-belajar/public/admin/jadwal">Jadwal Dokter</a></li>
-    <li><a href="/santri-belajar/public/admin/pasien">Database Pasien</a></li>
-    <li><a href="/santri-belajar/public/admin/logout">Keluar</a></li>
-</ul>
+<div class="menu-grid">
+    <a class="menu-card" href="<?= $base ?>/admin/loket"><h3>Loket Pemanggilan</h3><p>Pantau antrean yang menunggu, dipanggil, dan diproses.</p></a>
+    <a class="menu-card" href="<?= $base ?>/admin/antrean"><h3>Manajemen Antrean</h3><p>Filter dan cek daftar antrean pasien.</p></a>
+    <a class="menu-card" href="<?= $base ?>/admin/walkin"><h3>Pendaftaran Walk-in</h3><p>Input antrean pasien yang datang langsung.</p></a>
+    <a class="menu-card" href="<?= $base ?>/admin/poli"><h3>Kelola Poli</h3><p><?= count($poli) ?> data poli tersedia.</p></a>
+    <a class="menu-card" href="<?= $base ?>/admin/dokter"><h3>Kelola Dokter</h3><p><?= count($dokter) ?> data dokter tersedia.</p></a>
+    <a class="menu-card" href="<?= $base ?>/admin/jadwal"><h3>Jadwal Dokter</h3><p>Atur hari praktik, jam, dan kapasitas antrean.</p></a>
+    <a class="menu-card" href="<?= $base ?>/admin/pasien"><h3>Database Pasien</h3><p>Lihat dan kelola data pasien terdaftar.</p></a>
+</div>

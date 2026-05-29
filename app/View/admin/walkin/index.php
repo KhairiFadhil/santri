@@ -1,21 +1,32 @@
-<?php $base = '/santri-belajar/public'; ?>
+<?php $base = BASE_URL; ?>
 
-<h1>Pendaftaran Walk-in</h1>
+<div class="section-header">
+    <div>
+        <h1>Pendaftaran Walk-in</h1>
+        <p class="page-title-note">Input pasien yang datang langsung ke rumah sakit.</p>
+    </div>
+</div>
 
-<p>Form walk-in belum aktif karena controller store masih kosong.</p>
+<p class="alert alert-warning">Form walk-in belum aktif karena controller store masih kosong.</p>
 
-<form action="<?= $base ?>/admin/walkin" method="post">
-    <p>
-        <label>Nama Pasien</label><br>
-        <input type="text" name="walkin_name">
-    </p>
-    <p>
-        <label>NIK</label><br>
-        <input type="text" name="walkin_nik">
-    </p>
-    <p>
-        <label>No HP</label><br>
-        <input type="text" name="walkin_phone">
-    </p>
-    <button type="submit">Daftarkan</button>
-</form>
+<div class="form-card">
+    <form action="<?= $base ?>/admin/walkin" method="post">
+        <div class="form-row">
+            <p>
+                <label>Nama Pasien</label>
+                <input type="text" name="walkin_name">
+            </p>
+            <p>
+                <label>NIK</label>
+                <input type="text" name="walkin_nik">
+            </p>
+        </div>
+        <p>
+            <label>No HP</label>
+            <input type="text" name="walkin_phone">
+        </p>
+        <div class="form-actions">
+            <button type="submit">Daftarkan</button>
+        </div>
+    </form>
+</div>
