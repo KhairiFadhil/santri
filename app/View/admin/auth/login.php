@@ -1,25 +1,27 @@
-<?php /** @var string $error */ /** @var string $email */ ?>
+<?php /** @var string $error */ /** @var string $email */ $base = BASE_URL; ?>
 
 <h1>Login Petugas</h1>
+<p class="page-title-note">Masuk sebagai admin, petugas, atau dokter.</p>
 
 <?php if (!empty($error)): ?>
-    <p style="color: red;"><?= htmlspecialchars($error) ?></p>
+    <p class="alert alert-danger"><?= htmlspecialchars($error) ?></p>
 <?php endif; ?>
 
-<form method="POST" action="/santri-belajar/public/admin/login">
-    <p>
-        <label>Email:<br>
-        <input type="email" name="email" value="<?= htmlspecialchars($email) ?>" required>
-        </label>
-    </p>
+<div class="form-card">
+    <form method="POST" action="<?= $base ?>/admin/login">
+        <p>
+            <label>Email</label>
+            <input type="email" name="email" value="<?= htmlspecialchars($email) ?>" required>
+        </p>
 
-    <p>
-        <label>Password:<br>
-        <input type="password" name="password" required>
-        </label>
-    </p>
+        <p>
+            <label>Password</label>
+            <input type="password" name="password" required>
+        </p>
 
-    <p>
-        <button type="submit">Masuk</button>
-    </p>
-</form>
+        <div class="form-actions">
+            <button type="submit">Masuk</button>
+            <a class="btn-secondary" href="<?= $base ?>/">Kembali</a>
+        </div>
+    </form>
+</div>

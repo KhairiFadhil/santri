@@ -1,37 +1,52 @@
-<?php $base = '/santri-belajar/public'; ?>
+<?php $base = BASE_URL; ?>
 
-<h1>Database Pasien</h1>
+<div class="section-header">
+    <div>
+        <h1>Database Pasien</h1>
+        <p class="page-title-note">Cari dan kelola data pasien terdaftar.</p>
+    </div>
+</div>
 
-<form method="get" action="<?= $base ?>/admin/pasien">
-    <p>
-        <input type="text" name="q" value="<?= htmlspecialchars($keyword ?? '') ?>" placeholder="Cari pasien">
+<div class="filter-box">
+    <form method="get" action="<?= $base ?>/admin/pasien">
+        <label>Cari Pasien
+            <input type="text" name="q" value="<?= htmlspecialchars($keyword ?? '') ?>" placeholder="Nama, NIK, email, atau nomor HP">
+        </label>
         <button type="submit">Cari</button>
-    </p>
-</form>
+    </form>
+</div>
 
-<table border="1" cellpadding="5">
-    <tr>
-        <th>No</th>
-        <th>NIK</th>
-        <th>Nama</th>
-        <th>Email</th>
-        <th>No HP</th>
-        <th>Jenis Kelamin</th>
-        <th>Aksi</th>
-    </tr>
-    <?php foreach (($rows ?? []) as $i => $row): ?>
+<?php if (empty($rows)): ?>
+    <div class="empty-state">Data pasien tidak ditemukan.</div>
+<?php else: ?>
+<table>
+    <thead>
         <tr>
-            <td><?= $i + 1 ?></td>
-            <td><?= htmlspecialchars($row['nik'] ?? '') ?></td>
-            <td><?= htmlspecialchars($row['name'] ?? '') ?></td>
-            <td><?= htmlspecialchars($row['email'] ?? '') ?></td>
-            <td><?= htmlspecialchars($row['phone'] ?? '') ?></td>
-            <td><?= htmlspecialchars($row['gender'] ?? '') ?></td>
-            <td>
-                <form action="<?= $base ?>/admin/pasien/<?= $row['id'] ?>/delete" method="post">
-                    <button type="submit" onclick="return confirm('Hapus data pasien ini?')">Hapus</button>
-                </form>
-            </td>
+            <th>No</th>
+            <th>NIK</th>
+            <th>Nama</th>
+            <th>Email</th>
+            <th>No HP</th>
+            <th>Jenis Kelamin</th>
+            <th>Aksi</th>
         </tr>
-    <?php endforeach; ?>
+    </thead>
+    <tbody>
+        <?php foreach (($rows ?? []) as $i => $row): ?>
+            <tr>
+                <td><?= $i + 1 ?></td>
+                <td><?= htmlspecialchars($row['nik'] ?? '') ?></td>
+                <td><strong><?= htmlspecialchars($row['name'] ?? '') ?></strong></td>
+                <td><?= htmlspecialchars($row['email'] ?? '') ?></td>
+                <td><?= htmlspecialchars($row['phone'] ?? '') ?></td>
+                <td><?= htmlspecialchars($row['gender'] ?? '') ?></td>
+                <td>
+                    <form class="inline-form" action="<?= $base ?>/admin/pasien/<?= $row['id'] ?>/delete" method="post">
+                        <button type="submit" onclick="return confirm('Hapus data pasien ini?')">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
 </table>
+<?php endif; ?>

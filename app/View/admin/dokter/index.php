@@ -1,31 +1,47 @@
-<?php $base = '/santri-belajar/public'; ?>
+<?php $base = BASE_URL; ?>
 
-<h1>Daftar Dokter</h1>
+<div class="section-header">
+    <div>
+        <h1>Daftar Dokter</h1>
+        <p class="page-title-note">Kelola data dokter dan poli tempat praktik.</p>
+    </div>
+    <div class="section-actions">
+        <a class="button" href="<?= $base ?>/admin/dokter/create">Tambah Dokter</a>
+    </div>
+</div>
 
-<p><a href="<?= $base ?>/admin/dokter/create">Tambah Dokter</a></p>
-
-<table border="1" cellpadding="5">
-    <tr>
-        <th>No</th>
-        <th>Nama Dokter</th>
-        <th>Spesialis</th>
-        <th>Poli</th>
-        <th>Status</th>
-        <th>Aksi</th>
-    </tr>
-    <?php foreach (($rows ?? []) as $i => $row): ?>
+<?php if (empty($rows)): ?>
+    <div class="empty-state">Belum ada data dokter.</div>
+<?php else: ?>
+<table>
+    <thead>
         <tr>
-            <td><?= $i + 1 ?></td>
-            <td><?= htmlspecialchars($row['name'] ?? '') ?></td>
-            <td><?= htmlspecialchars($row['specialization'] ?? '') ?></td>
-            <td><?= htmlspecialchars($row['poli_name'] ?? '') ?></td>
-            <td><?= !empty($row['is_active']) ? 'Aktif' : 'Tidak Aktif' ?></td>
-            <td>
-                <a href="<?= $base ?>/admin/dokter/<?= $row['id'] ?>/edit">Edit</a>
-                <form action="<?= $base ?>/admin/dokter/<?= $row['id'] ?>/delete" method="post">
-                    <button type="submit" onclick="return confirm('Hapus data ini?')">Hapus</button>
-                </form>
-            </td>
+            <th>No</th>
+            <th>Nama Dokter</th>
+            <th>Spesialis</th>
+            <th>Poli</th>
+            <th>Status</th>
+            <th>Aksi</th>
         </tr>
-    <?php endforeach; ?>
+    </thead>
+    <tbody>
+        <?php foreach (($rows ?? []) as $i => $row): ?>
+            <tr>
+                <td><?= $i + 1 ?></td>
+                <td><strong><?= htmlspecialchars($row['name'] ?? '') ?></strong></td>
+                <td><?= htmlspecialchars($row['specialization'] ?? '') ?></td>
+                <td><?= htmlspecialchars($row['poli_name'] ?? '') ?></td>
+                <td><span class="badge <?= !empty($row['is_active']) ? 'badge-success' : 'badge-muted' ?>"><?= !empty($row['is_active']) ? 'Aktif' : 'Tidak Aktif' ?></span></td>
+                <td>
+                    <div class="action-group">
+                        <a href="<?= $base ?>/admin/dokter/<?= $row['id'] ?>/edit">Edit</a>
+                        <form action="<?= $base ?>/admin/dokter/<?= $row['id'] ?>/delete" method="post">
+                            <button type="submit" onclick="return confirm('Hapus data ini?')">Hapus</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
 </table>
+<?php endif; ?>

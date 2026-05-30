@@ -1,59 +1,78 @@
-<?php $base = '/santri-belajar/public'; ?>
+<?php $base = BASE_URL; ?>
 
-<h1>Manajemen Antrean</h1>
+<div class="section-header">
+    <div>
+        <h1>Manajemen Antrean</h1>
+        <p class="page-title-note">Pantau antrean berdasarkan poli dan status.</p>
+    </div>
+</div>
 
-<h2>Ringkasan</h2>
-<ul>
+<?php if (!empty($summary)): ?>
+<div class="stats-grid">
     <?php foreach (($summary ?? []) as $status => $jumlah): ?>
-        <li><?= htmlspecialchars($status) ?>: <?= htmlspecialchars((string)$jumlah) ?></li>
+        <div class="stat-card">
+            <span><?= htmlspecialchars(strtoupper($status)) ?></span>
+            <strong><?= htmlspecialchars((string)$jumlah) ?></strong>
+        </div>
     <?php endforeach; ?>
-</ul>
+</div>
+<?php endif; ?>
 
-<form method="get" action="<?= $base ?>/admin/antrean">
-    <p>
-        <label>Poli</label>
-        <select name="poli_id">
-            <option value="">Semua</option>
-            <?php foreach (($poli ?? []) as $p): ?>
-                <option value="<?= $p['id'] ?>" <?= (string)($filter['poli_id'] ?? '') === (string)$p['id'] ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($p['name'] ?? '') ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+<div class="filter-box">
+    <form method="get" action="<?= $base ?>/admin/antrean">
+        <label>Poli
+            <select name="poli_id">
+                <option value="">Semua</option>
+                <?php foreach (($poli ?? []) as $p): ?>
+                    <option value="<?= $p['id'] ?>" <?= (string)($filter['poli_id'] ?? '') === (string)$p['id'] ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($p['name'] ?? '') ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </label>
 
-        <label>Status</label>
-        <select name="status">
-            <option value="">Semua</option>
-            <?php foreach (['wait','call','progress','done','skip','cancel'] as $s): ?>
-                <option value="<?= $s ?>" <?= ($filter['status'] ?? '') === $s ? 'selected' : '' ?>><?= $s ?></option>
-            <?php endforeach; ?>
-        </select>
+        <label>Status
+            <select name="status">
+                <option value="">Semua</option>
+                <?php foreach (['wait','call','progress','done','skip','cancel'] as $s): ?>
+                    <option value="<?= $s ?>" <?= ($filter['status'] ?? '') === $s ? 'selected' : '' ?>><?= strtoupper($s) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </label>
 
         <button type="submit">Filter</button>
-    </p>
-</form>
+    </form>
+</div>
 
-<table border="1" cellpadding="5">
-    <tr>
-        <th>No</th>
-        <th>Kode</th>
-        <th>Pasien</th>
-        <th>Poli</th>
-        <th>Dokter</th>
-        <th>Tanggal</th>
-        <th>Jam</th>
-        <th>Status</th>
-    </tr>
-    <?php foreach (($rows ?? []) as $i => $row): ?>
+<?php if (empty($rows)): ?>
+    <div class="empty-state">Tidak ada data antrean.</div>
+<?php else: ?>
+<table>
+    <thead>
         <tr>
-            <td><?= $i + 1 ?></td>
-            <td><?= htmlspecialchars($row['ticket_code'] ?? '') ?></td>
-            <td><?= htmlspecialchars($row['patient_name'] ?? $row['user_name'] ?? $row['walkin_name'] ?? '-') ?></td>
-            <td><?= htmlspecialchars($row['poli_name'] ?? '') ?></td>
-            <td><?= htmlspecialchars($row['doctor_name'] ?? '') ?></td>
-            <td><?= htmlspecialchars($row['schedule_date'] ?? '') ?></td>
-            <td><?= htmlspecialchars(substr($row['schedule_time'] ?? '', 0, 5)) ?></td>
-            <td><?= htmlspecialchars($row['status'] ?? '') ?></td>
+            <th>No</th>
+            <th>Kode</th>
+            <th>Pasien</th>
+            <th>Poli</th>
+            <th>Dokter</th>
+            <th>Tanggal</th>
+            <th>Jam</th>
+            <th>Status</th>
         </tr>
-    <?php endforeach; ?>
+    </thead>
+    <tbody>
+        <?php foreach (($rows ?? []) as $i => $row): ?>
+            <tr>
+                <td><?= $i + 1 ?></td>
+                <td><strong><?= htmlspecialchars($row['ticket_code'] ?? '') ?></strong></td>
+                <td><?= htmlspecialchars($row['patient_name'] ?? $row['user_name'] ?? $row['walkin_name'] ?? '-') ?></td>
+                <td><?= htmlspecialchars($row['poli_name'] ?? '') ?></td>
+                <td><?= htmlspecialchars($row['doctor_name'] ?? '') ?></td>
+                <td><?= htmlspecialchars($row['schedule_date'] ?? '') ?></td>
+                <td><?= htmlspecialchars(substr($row['schedule_time'] ?? '', 0, 5)) ?></td>
+                <td><span class="badge"><?= htmlspecialchars(strtoupper($row['status'] ?? '')) ?></span></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
 </table>
+<?php endif; ?>
