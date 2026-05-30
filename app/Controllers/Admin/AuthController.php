@@ -47,7 +47,7 @@ class AuthController
             'name'  => $staff['name'],
             'email' => $staff['email'],
             'role'  => $staff['role'],
-            'doctor_id' => isset($staff['doctor_id']) ? (int)$staff['doctor_id'] : null,
+            'doctors_id' => isset($staff['doctors_id']) ? (int)$staff['doctors_id'] : null,
         ];
         if ($staff['role'] === 'dokter') {
             $this->redirect('/dokter/loket');

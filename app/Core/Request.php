@@ -1,7 +1,6 @@
 <?php
 namespace App\Core;
 
-// Wrapper untuk superglobals - menyederhanakan akses input
 class Request
 {
     public string $method;
@@ -14,13 +13,10 @@ class Request
         $this->uri    = $_SERVER['REQUEST_URI'] ?? '/';
     }
 
-    // Path bersih (tanpa query string, tanpa base prefix)
     public function path(): string
     {
         if ($this->path !== null) return $this->path;
         $uri = parse_url($this->uri, PHP_URL_PATH) ?? '/';
-
-        // Hapus prefix BASE_PATH dari URL agar router melihat path absolut "/login" bukan "/santri/public/login"
         $script = $_SERVER['SCRIPT_NAME'] ?? '';
         $base   = rtrim(str_replace('\\', '/', dirname($script)), '/');
         if ($base !== '' && str_starts_with($uri, $base)) {
