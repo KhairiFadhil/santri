@@ -24,11 +24,24 @@ class AntreanController
         if ($date > $maxDate) $date = $maxDate;
 
         View::render('antrean/daftar', [
-            'doctors' => Jadwal::doktersOnDate($date),
+            'doctors' => $this->doktersDenganKuota($date),
             'errors'  => [],
             'form'    => ['doctor_id' => '', 'complaint' => '', 'schedule_date' => $date],
             'hari'    => Jadwal::dayName($date),
         ], 'main');
+    }
+
+    // list dokter praktik + tempel sisa kuota tiap dokter
+    private function doktersDenganKuota(string $date): array
+    {
+        $doctors = Jadwal::doktersOnDate($date);
+        foreach ($doctors as &$d) {
+            $k = Jadwal::sisaKuota((int)$d['id'], $date);
+            $d['sisa'] = $k['sisa'];
+            $d['penuh'] = $k['penuh'];
+        }
+        unset($d);
+        return $doctors;
     }
 
     public function daftarProcess(): void
@@ -73,7 +86,7 @@ class AntreanController
 
         if ($errors) {
             View::render('antrean/daftar', [
-                'doctors' => Jadwal::doktersOnDate($form['schedule_date']),
+                'doctors' => $this->doktersDenganKuota($form['schedule_date']),
                 'errors'  => $errors,
                 'form'    => $form,
                 'hari'    => Jadwal::dayName($form['schedule_date']),
@@ -94,7 +107,7 @@ class AntreanController
             ]);
         } catch (\Throwable $e) {
             View::render('antrean/daftar', [
-                'doctors' => Jadwal::doktersOnDate($form['schedule_date']),
+                'doctors' => $this->doktersDenganKuota($form['schedule_date']),
                 'errors'  => [$e->getMessage()],
                 'form'    => $form,
                 'hari'    => Jadwal::dayName($form['schedule_date']),

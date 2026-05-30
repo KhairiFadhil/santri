@@ -8,6 +8,7 @@ USE santri_belajar;
 
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS queues;
+DROP TABLE IF EXISTS doctor_off;
 DROP TABLE IF EXISTS schedules;
 DROP TABLE IF EXISTS doctors;
 DROP TABLE IF EXISTS poli;
@@ -81,6 +82,15 @@ CREATE TABLE schedules (
     capacity    INT UNSIGNED DEFAULT 30,
     CONSTRAINT fk_schedule_doctor FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE,
     UNIQUE KEY uniq_doctor_day (doctor_id, day_of_week)
+) ENGINE=InnoDB;
+
+
+-- libur dadakan dokter (per tanggal)
+CREATE TABLE doctor_off (
+    doctor_id INT UNSIGNED NOT NULL,
+    off_date  DATE NOT NULL,
+    PRIMARY KEY (doctor_id, off_date),
+    CONSTRAINT fk_off_doctor FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 

@@ -45,14 +45,19 @@
                     <th>Dokter</th>
                     <th>Poli</th>
                     <th>Jam Praktik</th>
+                    <th>Sisa Kuota</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($doctors as $d): ?>
                     <tr>
                         <td>
-                            <input type="radio" name="doctor_id" value="<?= $d['id'] ?>"
-                                   <?= $form['doctor_id']==$d['id']?'checked':'' ?> required>
+                            <?php if (!empty($d['penuh'])): ?>
+                                <input type="radio" disabled>
+                            <?php else: ?>
+                                <input type="radio" name="doctor_id" value="<?= $d['id'] ?>"
+                                       <?= $form['doctor_id']==$d['id']?'checked':'' ?> required>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <strong><?= htmlspecialchars($d['name']) ?></strong><br>
@@ -60,6 +65,13 @@
                         </td>
                         <td><?= htmlspecialchars($d['poli_name']) ?></td>
                         <td><?= substr($d['time_start'], 0, 5) ?> – <?= substr($d['time_end'], 0, 5) ?></td>
+                        <td>
+                            <?php if (!empty($d['penuh'])): ?>
+                                <strong>PENUH</strong>
+                            <?php else: ?>
+                                <?= isset($d['sisa']) ? (int)$d['sisa'] : '-' ?>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

@@ -82,15 +82,17 @@
                 stopPolling('Antrean dibatalkan.', '#888');
                 return;
             }
-            if (q.status === 'call' && lastStatus !== 'call') {
+            if (q.status === 'call') {
                 $msg.textContent = 'Giliran Anda! Silakan menuju ' + q.poli_name + '.';
                 $msg.style.color = 'green';
             } else if (q.status === 'progress') {
                 $msg.textContent = 'Anda sedang diperiksa dokter.';
                 $msg.style.color = 'blue';
-            } else if (q.ahead === 2) {
-                $msg.textContent = 'Bersiap, tinggal 2 antrean lagi sebelum giliran Anda.';
+            } else if (q.ahead <= 2 && q.ahead > 0) {
+                $msg.textContent = 'Bersiap, sebentar lagi giliran Anda.';
                 $msg.style.color = 'orange';
+            } else {
+                $msg.textContent = '';
             }
             lastStatus = q.status;
         } catch (err) {

@@ -25,6 +25,25 @@ class Antrian
             throw new \RuntimeException('Anda sudah punya antrean aktif.');
         }
 
+        // dokter lagi libur
+        if (Jadwal::isOff($doctorId, $date)) {
+            throw new \RuntimeException('Dokter sedang tidak praktik (libur) di tanggal tersebut.');
+        }
+
+        // cek kuota
+        $kuota = Jadwal::sisaKuota($doctorId, $date);
+        if (!$kuota['ada_jadwal']) {
+            throw new \RuntimeException('Dokter tidak praktik di tanggal tersebut.');
+        }
+        if ($kuota['penuh']) {
+            throw new \RuntimeException('Kuota dokter untuk tanggal ini sudah penuh.');
+        }
+
+        // kalau daftar hari ini, jangan sampai keburu tutup
+        if (!Jadwal::masihKeburu($doctorId, $date)) {
+            throw new \RuntimeException('Perkiraan tidak terlayani hari ini, jam praktik hampir habis. Silakan pilih tanggal lain.');
+        }
+
         // prefix dari kode poli
         $poli = Poli::findById($poliId);
         if (!$poli) throw new \RuntimeException('Poli tidak ditemukan.');
@@ -259,6 +278,25 @@ class Antrian
         $stmt = db()->prepare($sql);
         $stmt->execute([$doctorId, $date]);
         return $stmt->fetch() ?: null;
+    }
+
+    // tutup antrean basi: yg masih aktif tapi tanggalnya udah lewat -> skip
+    public static function expireStale(): int
+    {
+        $st = db()->prepare("UPDATE queues SET status = 'skip'
+            WHERE status IN ('wait','call','progress') AND schedule_date < CURDATE()");
+        $st->execute();
+        return $st->rowCount();
+    }
+
+    // panggil ulang pasien yg sempat di-skip -> balik ke wait
+    public static function recall(int $id, int $doctorId): bool
+    {
+        $st = db()->prepare("UPDATE queues SET status = 'wait', handled_by = NULL,
+                                    called_at = NULL, started_at = NULL
+            WHERE id = ? AND doctor_id = ? AND status = 'skip' AND schedule_date = CURDATE()");
+        $st->execute([$id, $doctorId]);
+        return $st->rowCount() > 0;
     }
 
     public static function RiwayatUser(int $userId): array

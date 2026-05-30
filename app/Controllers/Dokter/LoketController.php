@@ -5,6 +5,7 @@ namespace App\Controllers\Dokter;
 use App\Core\View;
 use App\Model\Antrian;
 use App\Model\Dokter;
+use App\Model\Jadwal;
 
 class LoketController
 {
@@ -27,7 +28,7 @@ class LoketController
 
         foreach ($antrianToday as $a) {
             if (in_array($a['status'], ['call','progress'], true)) {
-                $now = $a;
+                if ($now === null) $now = $a;
             } elseif ($a['status'] === 'wait') {
                 $waiting[] = $a;
             } else {
@@ -41,7 +42,26 @@ class LoketController
             'waiting' => $waiting,
             'selesai' => $selesai,
             'isBusy'  => Antrian::isDoctorBusy($doctorId, date('Y-m-d')),
+            'isOff'   => Jadwal::isOff($doctorId, date('Y-m-d')),
         ], 'main');
+    }
+
+    // dokter libur dadakan, tutup praktik hari ini
+    public function tutup(): void
+    {
+        $doctorId = (int)($_SESSION['staff']['doctors_id'] ?? 0);
+        Jadwal::setOff($doctorId, date('Y-m-d'));
+        $this->flash('success', 'Praktik hari ini ditutup. Pasien tidak bisa daftar lagi.');
+        $this->redirect('/dokter/loket');
+    }
+
+    // buka lagi praktik hari ini
+    public function buka(): void
+    {
+        $doctorId = (int)($_SESSION['staff']['doctors_id'] ?? 0);
+        Jadwal::unsetOff($doctorId, date('Y-m-d'));
+        $this->flash('success', 'Praktik hari ini dibuka kembali.');
+        $this->redirect('/dokter/loket');
     }
 
     // POST /dokter/loket/{id}/call - panggil pasien wait -> call
@@ -99,6 +119,15 @@ class LoketController
         } else {
             $this->flash('success', 'Pasien selesai. Tidak ada antrean lagi.');
         }
+        $this->redirect('/dokter/loket');
+    }
+
+    // panggil ulang pasien yg sempat di-skip
+    public function recall($id): void
+    {
+        $doctorId = (int)($_SESSION['staff']['doctors_id'] ?? 0);
+        $ok = Antrian::recall((int)$id, $doctorId);
+        $this->flash($ok ? 'success' : 'warn', $ok ? 'Pasien dikembalikan ke antrean.' : 'Gagal panggil ulang.');
         $this->redirect('/dokter/loket');
     }
 

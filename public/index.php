@@ -5,6 +5,9 @@
     require __DIR__ . '/../config/app.php';
     require __DIR__ . '/../config/database.php';
 
+    // tutup antrean basi tiap request
+    \App\Model\Antrian::expireStale();
+
     $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     $method = $_SERVER['REQUEST_METHOD'];
 
@@ -76,6 +79,9 @@
         'POST /dokter/loket/{id}/done'      => ['App\Controllers\Dokter\LoketController', 'done',        'dokter'],
         'POST /dokter/loket/{id}/skip'      => ['App\Controllers\Dokter\LoketController', 'skip',        'dokter'],
         'POST /dokter/loket/{id}/done-next' => ['App\Controllers\Dokter\LoketController', 'doneAndNext', 'dokter'],
+        'POST /dokter/loket/{id}/recall'    => ['App\Controllers\Dokter\LoketController', 'recall',      'dokter'],
+        'POST /dokter/loket/tutup'          => ['App\Controllers\Dokter\LoketController', 'tutup',       'dokter'],
+        'POST /dokter/loket/buka'           => ['App\Controllers\Dokter\LoketController', 'buka',        'dokter'],
 
     ];
 

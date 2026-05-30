@@ -1,7 +1,7 @@
 <?php /** @var array $poli */ /** @var array $live */ ?>
 
 <h1>Selamat Datang di SANTRI</h1>
-<p>Sistem Antrian Rumah Sakit Terintegrasi — <strong><?= HOSPITAL_NAME ?></strong>.</p>
+<p>Sistem Antrian Rumah Sakit Terintegrasi <strong><?= HOSPITAL_NAME ?></strong>.</p>
 <p>Daftar antrean online tanpa perlu antre lama di rumah sakit. Pilih dokter, tentukan tanggal, dapat nomor antrean langsung.</p>
 
 <h2>Antrean Live Hari Ini</h2>
@@ -50,22 +50,9 @@
 <?php else: ?>
     <ul>
         <?php foreach ($poli as $p): ?>
-            <li><strong><?= htmlspecialchars($p['name']) ?></strong> — <?= htmlspecialchars($p['sub']) ?></li>
+            <li><strong><?= htmlspecialchars($p['name']) ?></strong> <?= htmlspecialchars($p['sub']) ?></li>
         <?php endforeach; ?>
     </ul>
-<?php endif; ?>
-
-<h2>Mulai</h2>
-<?php if (isset($_SESSION['user'])): ?>
-    <p>
-        <a href="/santri-belajar/public/dashboard">Buka Dashboard</a> &middot;
-        <a href="/santri-belajar/public/daftar">Daftar Antrean</a>
-    </p>
-<?php else: ?>
-    <p>
-        <a href="/santri-belajar/public/login">Masuk</a> &middot;
-        <a href="/santri-belajar/public/register">Daftar Akun Baru</a>
-    </p>
 <?php endif; ?>
 
 <hr>

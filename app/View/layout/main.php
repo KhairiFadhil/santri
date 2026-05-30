@@ -15,8 +15,24 @@
   <body>
       <nav>
           <a href="/santri-belajar/public/">Beranda</a>
-          <a href="/santri-belajar/public/login">Masuk</a>
-          <a href="/santri-belajar/public/register">Daftar</a>
+          <?php if (isset($_SESSION['user'])): ?>
+              <a href="/santri-belajar/public/dashboard">Dashboard</a>
+              <a href="/santri-belajar/public/daftar">Daftar Antrean</a>
+              <a href="/santri-belajar/public/antrean">Antrean Saya</a>
+              <a href="/santri-belajar/public/riwayat">Riwayat</a>
+              <a href="/santri-belajar/public/profile">Profil</a>
+              <a href="/santri-belajar/public/logout">Keluar</a>
+          <?php elseif (isset($_SESSION['staff'])): ?>
+              <?php if (($_SESSION['staff']['role'] ?? '') === 'dokter'): ?>
+                  <a href="/santri-belajar/public/dokter/loket">Loket Saya</a>
+              <?php else: ?>
+                  <a href="/santri-belajar/public/admin">Admin</a>
+              <?php endif; ?>
+              <a href="/santri-belajar/public/admin/logout">Keluar</a>
+          <?php else: ?>
+              <a href="/santri-belajar/public/login">Masuk</a>
+              <a href="/santri-belajar/public/register">Daftar Akun</a>
+          <?php endif; ?>
       </nav>
 
       <main>
