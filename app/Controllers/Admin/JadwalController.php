@@ -16,7 +16,7 @@ class JadwalController
             'grid' => $this->weeklyGrid(),
             'doctors' => Dokter::all(true),
             'days' => self::DAYS,
-        ], 'main');
+        ], 'admin');
     }
 
     public function upsert(): void

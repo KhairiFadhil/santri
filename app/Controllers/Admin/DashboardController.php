@@ -35,7 +35,7 @@ class DashboardController
             'dokter' => Dokter::all(true),
             'staff' => Staff::all(),
             'pasien' => User::all(10),
-        ], 'main');
+        ], 'admin');
     }
 
     private function countTable(string $table): int

@@ -18,7 +18,7 @@ class WalkinController
             'form' => $this->emptyForm(),
             'doctors' => Dokter::all(true),
             'poli' => Poli::all(true),
-        ], 'main');
+        ], 'admin');
     }
 
     public function store(): void
@@ -40,7 +40,7 @@ class WalkinController
                 'form' => $form,
                 'doctors' => Dokter::all(true),
                 'poli' => Poli::all(true),
-            ], 'main');
+            ], 'admin');
             return;
         }
 
@@ -71,7 +71,7 @@ class WalkinController
                 'form' => $form,
                 'doctors' => Dokter::all(true),
                 'poli' => Poli::all(true),
-            ], 'main');
+            ], 'admin');
         }
     }
 

@@ -1,84 +1,127 @@
 <?php /** @var array $poli */ /** @var array $live */ ?>
 
-<h1>Selamat Datang di SANTRI</h1>
-<p>Sistem Antrian Rumah Sakit Terintegrasi <strong><?= HOSPITAL_NAME ?></strong>.</p>
-<p>Daftar antrean online tanpa perlu antre lama di rumah sakit. Pilih dokter, tentukan tanggal, dapat nomor antrean langsung.</p>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-text">
+        <h1 class="hero-title">Antre dari rumah,<br>datang tepat waktu.</h1>
+        <p class="hero-desc">Pilih dokter, ambil nomor antrean online, dan pantau posisi antrean Anda secara real-time. Tanpa antre panjang di rumah sakit.</p>
+        <div class="hero-actions">
+            <?php if (isset($_SESSION['user'])): ?>
+                <a class="btn btn-primary btn-lg" href="<?= BASE_URL ?>/daftar">Daftar Antrean Sekarang</a>
+                <a class="btn btn-ghost btn-lg" href="<?= BASE_URL ?>/antrean">Antrean Saya</a>
+            <?php else: ?>
+                <a class="btn btn-primary btn-lg" href="<?= BASE_URL ?>/register">Daftar Antrean Sekarang</a>
+                <a class="btn btn-ghost btn-lg" href="#live">Lihat Antrean Live</a>
+            <?php endif; ?>
+        </div>
+    </div>
 
-<h2>Antrean Live Hari Ini</h2>
-<p><small>Update otomatis tiap 5 detik. Terakhir update: <span id="live-updated">-</span></small></p>
-
-<div id="live-board">
-    <?php if (empty($live)): ?>
-        <p><em>Belum ada antrean aktif hari ini.</em></p>
-    <?php else: ?>
-        <?php foreach ($live as $row): ?>
-            <div class="live-card" data-doctor-id="<?= (int)$row['doctor_id'] ?>">
-                <h3>
-                    <?= htmlspecialchars($row['poli_name']) ?>
-                    <small>(<?= htmlspecialchars($row['doctor_name']) ?>)</small>
-                </h3>
-                <p>
-                    Sedang dipanggil:
-                    <?php if ($row['now_serving']): ?>
-                        <strong class="now"><?= htmlspecialchars($row['now_serving']['ticket_code']) ?></strong>
-                        (<?= $row['now_serving']['status'] === 'progress' ? 'sedang diperiksa' : 'memanggil' ?>)
-                    <?php else: ?>
-                        <em class="now">-</em>
-                    <?php endif; ?>
-                </p>
-                <p>
-                    Berikutnya:
-                    <span class="next">
-                        <?php if (empty($row['next'])): ?>
-                            <em>tidak ada</em>
-                        <?php else: ?>
-                            <?php foreach ($row['next'] as $i => $n): ?>
-                                <?= $i ? ', ' : '' ?><?= htmlspecialchars($n['ticket_code']) ?>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </span>
-                </p>
-                <p><small>Total menunggu: <span class="waiting"><?= (int)$row['waiting'] ?></span> orang</small></p>
+    <div class="hero-visual">
+        <div class="card hero-ticket">
+            <div class="hero-ticket-top">
+                <span class="hero-ticket-label">Nomor Antrean Anda</span>
+                <span class="badge call"><i></i>Dipanggil</span>
             </div>
-        <?php endforeach; ?>
+            <div class="mono hero-ticket-no">UMU-027</div>
+            <div class="hero-ticket-sub">Poli Umum &middot; dr. Ayu Larasati</div>
+            <div class="hero-ticket-meta">
+                <div><div class="mono hero-ticket-mv">0</div><div class="hero-ticket-ml">antre di depan</div></div>
+                <div><div class="mono hero-ticket-mv">08:30</div><div class="hero-ticket-ml">jam praktik</div></div>
+            </div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE BOARD -->
+<section id="live" class="home-sec">
+    <div class="live-head">
+        <span class="live-dot"></span>
+        <h2>Antrean Live Hari Ini</h2>
+        <span class="live-note">Update otomatis &middot; <span id="live-updated">-</span></span>
+    </div>
+
+    <div id="live-board">
+        <?php if (empty($live)): ?>
+            <p><em>Belum ada antrean aktif hari ini.</em></p>
+        <?php else: ?>
+            <?php foreach ($live as $row): ?>
+                <div class="card card-pad live-card" data-doctor-id="<?= (int)$row['doctor_id'] ?>">
+                    <div class="live-card-head">
+                        <span class="tag mono"><?= htmlspecialchars($row['poli_code']) ?></span>
+                        <span class="live-card-poli"><?= htmlspecialchars($row['poli_name']) ?></span>
+                    </div>
+                    <div class="live-card-label">Sedang dipanggil</div>
+                    <div class="mono live-card-no<?= $row['now_serving'] ? '' : ' off' ?>">
+                        <?= $row['now_serving'] ? htmlspecialchars($row['now_serving']['ticket_code']) : '—' ?>
+                    </div>
+                    <div class="live-card-wait"><span class="waiting"><?= (int)$row['waiting'] ?></span> pasien menunggu</div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+</section>
+
+<!-- POLI GRID -->
+<section class="home-sec home-sec-alt">
+    <h2 class="home-sec-title">Poliklinik Tersedia</h2>
+    <p class="home-sec-desc">Layanan poliklinik dengan dokter berpengalaman.</p>
+    <?php if (empty($poli)): ?>
+        <p><em>Belum ada poli aktif.</em></p>
+    <?php else: ?>
+        <div class="poli-grid">
+            <?php foreach ($poli as $p): ?>
+                <div class="card card-pad poli-item">
+                    <span class="poli-code mono"><?= htmlspecialchars($p['code']) ?></span>
+                    <div>
+                        <div class="poli-name"><?= htmlspecialchars($p['name']) ?></div>
+                        <div class="poli-sub"><?= htmlspecialchars($p['sub']) ?></div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
     <?php endif; ?>
-</div>
+</section>
 
-<h2>Poli yang Tersedia</h2>
-<?php if (empty($poli)): ?>
-    <p>Belum ada poli aktif.</p>
-<?php else: ?>
-    <ul>
-        <?php foreach ($poli as $p): ?>
-            <li><strong><?= htmlspecialchars($p['name']) ?></strong> <?= htmlspecialchars($p['sub']) ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
-
-<hr>
-<p><small>Alamat: <?= HOSPITAL_ADDRESS ?> &middot; Telp: <?= HOSPITAL_PHONE ?></small></p>
+<!-- CTA -->
+<section class="cta">
+    <div class="cta-text">
+        <h2>Siap mengantre lebih nyaman?</h2>
+        <?php if (isset($_SESSION['user'])): ?>
+            <p>Pilih dokter, tentukan tanggal, dan ambil nomor antrean Anda hari ini.</p>
+        <?php else: ?>
+            <p>Buat akun pasien dan ambil nomor antrean pertama Anda hari ini. Gratis dan mudah.</p>
+        <?php endif; ?>
+    </div>
+    <div class="cta-actions">
+        <?php if (isset($_SESSION['user'])): ?>
+            <a class="btn btn-lg cta-btn" href="<?= BASE_URL ?>/daftar">Ambil Nomor Antrean</a>
+        <?php else: ?>
+            <a class="btn btn-lg cta-btn" href="<?= BASE_URL ?>/register">Daftar Akun</a>
+            <a class="btn btn-lg cta-btn-ghost" href="<?= BASE_URL ?>/login">Masuk</a>
+        <?php endif; ?>
+    </div>
+</section>
 
 <script>
 (function () {
     const board = document.getElementById('live-board');
     const updatedAt = document.getElementById('live-updated');
-    const endpoint = '/santri-belajar/public/api/queue/live';
+    const endpoint = '<?= BASE_URL ?>/api/queue/live';
 
-    function renderCard(row) {
-        const next = row.next.length
-            ? row.next.map(n => n.ticket_code).join(', ')
-            : '<em>tidak ada</em>';
-        const now = row.now_serving
-            ? `<strong class="now">${row.now_serving.ticket_code}</strong> (${row.now_serving.status === 'progress' ? 'sedang diperiksa' : 'memanggil'})`
-            : '<em class="now">-</em>';
+    function card(row) {
+        const no = row.now_serving ? row.now_serving.ticket_code : '—';
         return `
-            <div class="live-card" data-doctor-id="${row.doctor_id}">
-                <h3>${row.poli_name} <small>(${row.doctor_name})</small></h3>
-                <p>Sedang dipanggil: ${now}</p>
-                <p>Berikutnya: <span class="next">${next}</span></p>
-                <p><small>Total menunggu: <span class="waiting">${row.waiting}</span> orang</small></p>
-            </div>
-        `;
+            <div class="card card-pad live-card" data-doctor-id="${row.doctor_id}">
+                <div class="live-card-head">
+                    <span class="tag mono">${row.poli_code}</span>
+                    <span class="live-card-poli">${row.poli_name}</span>
+                </div>
+                <div class="live-card-label">Sedang dipanggil</div>
+                <div class="mono live-card-no${row.now_serving ? '' : ' off'}">${no}</div>
+                <div class="live-card-wait"><span class="waiting">${row.waiting}</span> pasien menunggu</div>
+            </div>`;
     }
 
     async function refresh() {
@@ -86,17 +129,12 @@
             const res = await fetch(endpoint, { cache: 'no-store' });
             const data = await res.json();
             if (!data.ok) return;
-            if (!data.live.length) {
-                board.innerHTML = '<p><em>Belum ada antrean aktif hari ini.</em></p>';
-            } else {
-                board.innerHTML = data.live.map(renderCard).join('');
-            }
+            board.innerHTML = data.live.length
+                ? data.live.map(card).join('')
+                : '<p><em>Belum ada antrean aktif hari ini.</em></p>';
             updatedAt.textContent = new Date().toLocaleTimeString('id-ID');
-        } catch (e) {
-            console.error('live queue refresh failed', e);
-        }
+        } catch (e) {}
     }
-
     refresh();
     setInterval(refresh, 5000);
 })();
