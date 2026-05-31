@@ -29,6 +29,6 @@ class AntreanController
                 'skip' => Antrian::countByStatusHariIni('skip'),
                 'cancel' => Antrian::countByStatusHariIni('cancel'),
             ],
-        ], 'main');
+        ], 'admin');
     }
 }

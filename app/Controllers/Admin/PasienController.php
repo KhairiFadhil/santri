@@ -16,7 +16,7 @@ class PasienController
         View::render('admin/pasien/index', [
             'rows' => $keyword === '' ? User::all(200) : $this->search($keyword),
             'keyword' => $keyword,
-        ], 'main');
+        ], 'admin');
     }
 
     public function delete($id): void

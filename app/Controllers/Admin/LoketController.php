@@ -19,6 +19,6 @@ class LoketController
             'called'   => Antrian::listActive($poliId, 'call'),
             'progress' => Antrian::listActive($poliId, 'progress'),
             'done'     => Antrian::listHariIni($poliId, 'done'),
-        ], 'main');
+        ], 'admin');
     }
 }

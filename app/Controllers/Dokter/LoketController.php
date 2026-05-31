@@ -43,7 +43,7 @@ class LoketController
             'selesai' => $selesai,
             'isBusy'  => Antrian::isDoctorBusy($doctorId, date('Y-m-d')),
             'isOff'   => Jadwal::isOff($doctorId, date('Y-m-d')),
-        ], 'main');
+        ], 'dokter');
     }
 
     // dokter libur dadakan, tutup praktik hari ini

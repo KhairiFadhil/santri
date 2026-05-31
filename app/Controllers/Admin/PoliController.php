@@ -13,7 +13,7 @@ class PoliController
     {
         View::render('admin/poli/index', [
             'rows' => Poli::all(),
-        ], 'main');
+        ], 'admin');
     }
 
     public function create(): void
@@ -22,7 +22,7 @@ class PoliController
             'errors' => [],
             'form' => $this->emptyForm(),
             'mode' => 'create',
-        ], 'main');
+        ], 'admin');
     }
 
     public function store(): void
@@ -39,7 +39,7 @@ class PoliController
                 'errors' => $errors,
                 'form' => $form,
                 'mode' => 'create',
-            ], 'main');
+            ], 'admin');
             return;
         }
 
@@ -61,7 +61,7 @@ class PoliController
             'errors' => [],
             'form' => $poli,
             'mode' => 'edit',
-        ], 'main');
+        ], 'admin');
     }
 
     public function update($id): void
@@ -88,7 +88,7 @@ class PoliController
                 'errors' => $errors,
                 'form' => $form,
                 'mode' => 'edit',
-            ], 'main');
+            ], 'admin');
             return;
         }
 

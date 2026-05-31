@@ -15,7 +15,7 @@ class DokterController
         View::render('admin/dokter/index', [
             'rows' => Dokter::all(false),
             'poli' => Poli::all(),
-        ], 'main');
+        ], 'admin');
     }
 
     public function create(): void
@@ -25,7 +25,7 @@ class DokterController
             'form' => $this->emptyForm(),
             'poli' => Poli::all(),
             'mode' => 'create',
-        ], 'main');
+        ], 'admin');
     }
 
     public function store(): void
@@ -39,7 +39,7 @@ class DokterController
                 'form' => $form,
                 'poli' => Poli::all(),
                 'mode' => 'create',
-            ], 'main');
+            ], 'admin');
             return;
         }
 
@@ -62,7 +62,7 @@ class DokterController
             'form' => $dokter,
             'poli' => Poli::all(),
             'mode' => 'edit',
-        ], 'main');
+        ], 'admin');
     }
 
     public function update($id): void
@@ -85,7 +85,7 @@ class DokterController
                 'form' => $form,
                 'poli' => Poli::all(),
                 'mode' => 'edit',
-            ], 'main');
+            ], 'admin');
             return;
         }
 
