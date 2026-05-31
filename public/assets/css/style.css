@@ -15,6 +15,9 @@
     --accent-600: #0052cc;
     --accent-50: #eaf2ff;
 
+    --secondary: #6c757d;;
+    --secondary-50: #5a6268;
+
     --sukses: #22c55e;
     --sukses-50: #eafbf1;
 
@@ -216,6 +219,15 @@ textarea {
 
 .btn-primary:hover {
     background: var(--accent-600);
+}
+
+.btn-secondary {
+    background: var(--secondary);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: var(--secondary-50);
 }
 
 .btn-success {

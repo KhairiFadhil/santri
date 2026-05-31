@@ -1,4 +1,5 @@
 <?php $base = BASE_URL; ?>
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/admin.css">
 
 <div class="section-header">
     <div>
@@ -6,14 +7,14 @@
         <p class="page-title-note">Kelola data poli dan status buka/tutup.</p>
     </div>
     <div class="section-actions">
-        <a class="button" href="<?= $base ?>/admin/poli/create">Tambah Poli</a>
+        <a class="btn btn-primary" href="<?= $base ?>/admin/poli/create">Tambah Poli</a>
     </div>
 </div>
 
 <?php if (empty($rows)): ?>
     <div class="empty-state">Belum ada data poli.</div>
 <?php else: ?>
-<table>
+<table class="table">
     <thead>
         <tr>
             <th>No</th>
@@ -34,9 +35,9 @@
                 <td><span class="badge <?= !empty($row['is_open']) ? 'badge-success' : 'badge-muted' ?>"><?= !empty($row['is_open']) ? 'Buka' : 'Tutup' ?></span></td>
                 <td>
                     <div class="action-group">
-                        <a href="<?= $base ?>/admin/poli/<?= $row['id'] ?>/edit">Edit</a>
+                        <a href="<?= $base ?>/admin/poli/<?= $row['id'] ?>/edit" class="btn btn-primary">Edit</a>
                         <form action="<?= $base ?>/admin/poli/<?= $row['id'] ?>/delete" method="post">
-                            <button type="submit" onclick="return confirm('Hapus data ini?')">Hapus</button>
+                            <button type="submit" onclick="return confirm('Hapus data ini?')" class="btn btn-danger">Hapus</button>
                         </form>
                     </div>
                 </td>

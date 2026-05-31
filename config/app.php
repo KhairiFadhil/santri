@@ -12,7 +12,7 @@ define('QUEUE_SLOT_MINUTES',    30);
 define('NOTIFICATION_LEAD',     3);
 define('WALKIN_ENABLED',        true);
 
-define('BASE_URL', '/santri-belajar/public');
+define('BASE_URL', '');
 
 function format_tanggal_id(?string $date): string
 {

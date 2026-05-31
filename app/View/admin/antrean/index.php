@@ -1,4 +1,5 @@
 <?php $base = BASE_URL; ?>
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/admin.css">
 
 <div class="section-header">
     <div>
@@ -8,7 +9,7 @@
 </div>
 
 <?php if (!empty($summary)): ?>
-<div class="stats-grid">
+<div class="stats-grid" style="margin-bottom: 1.5rem;">
     <?php foreach (($summary ?? []) as $status => $jumlah): ?>
         <div class="stat-card">
             <span><?= htmlspecialchars(strtoupper($status)) ?></span>
@@ -20,8 +21,8 @@
 
 <div class="filter-box">
     <form method="get" action="<?= $base ?>/admin/antrean">
-        <label>Poli
-            <select name="poli_id">
+        <label class="form-label">Poli
+            <select name="poli_id" class="form-control">
                 <option value="">Semua</option>
                 <?php foreach (($poli ?? []) as $p): ?>
                     <option value="<?= $p['id'] ?>" <?= (string)($filter['poli_id'] ?? '') === (string)$p['id'] ? 'selected' : '' ?>>
@@ -31,8 +32,8 @@
             </select>
         </label>
 
-        <label>Status
-            <select name="status">
+        <label class="form-label">Status
+            <select name="status" class="form-control">
                 <option value="">Semua</option>
                 <?php foreach (['wait','call','progress','done','skip','cancel'] as $s): ?>
                     <option value="<?= $s ?>" <?= ($filter['status'] ?? '') === $s ? 'selected' : '' ?>><?= strtoupper($s) ?></option>
@@ -40,39 +41,41 @@
             </select>
         </label>
 
-        <button type="submit">Filter</button>
+        <button type="submit" class="btn btn-primary">Filter</button>
     </form>
 </div>
 
 <?php if (empty($rows)): ?>
     <div class="empty-state">Tidak ada data antrean.</div>
 <?php else: ?>
-<table>
-    <thead>
-        <tr>
-            <th>No</th>
-            <th>Kode</th>
-            <th>Pasien</th>
-            <th>Poli</th>
-            <th>Dokter</th>
-            <th>Tanggal</th>
-            <th>Jam</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach (($rows ?? []) as $i => $row): ?>
+<div class="card table-wrapper">
+    <table class="table">
+        <thead>
             <tr>
-                <td><?= $i + 1 ?></td>
-                <td><strong><?= htmlspecialchars($row['ticket_code'] ?? '') ?></strong></td>
-                <td><?= htmlspecialchars($row['patient_name'] ?? $row['user_name'] ?? $row['walkin_name'] ?? '-') ?></td>
-                <td><?= htmlspecialchars($row['poli_name'] ?? '') ?></td>
-                <td><?= htmlspecialchars($row['doctor_name'] ?? '') ?></td>
-                <td><?= htmlspecialchars($row['schedule_date'] ?? '') ?></td>
-                <td><?= htmlspecialchars(substr($row['schedule_time'] ?? '', 0, 5)) ?></td>
-                <td><span class="badge"><?= htmlspecialchars(strtoupper($row['status'] ?? '')) ?></span></td>
+                <th>No</th>
+                <th>Kode</th>
+                <th>Pasien</th>
+                <th>Poli</th>
+                <th>Dokter</th>
+                <th>Tanggal</th>
+                <th>Jam</th>
+                <th>Status</th>
             </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php foreach (($rows ?? []) as $i => $row): ?>
+                <tr>
+                    <td><?= $i + 1 ?></td>
+                    <td><strong><?= htmlspecialchars($row['ticket_code'] ?? '') ?></strong></td>
+                    <td><?= htmlspecialchars($row['patient_name'] ?? $row['user_name'] ?? $row['walkin_name'] ?? '-') ?></td>
+                    <td><?= htmlspecialchars($row['poli_name'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['doctor_name'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($row['schedule_date'] ?? '') ?></td>
+                    <td><?= htmlspecialchars(substr($row['schedule_time'] ?? '', 0, 5)) ?></td>
+                    <td><span class="badge"><?= htmlspecialchars(strtoupper($row['status'] ?? '')) ?></span></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 <?php endif; ?>

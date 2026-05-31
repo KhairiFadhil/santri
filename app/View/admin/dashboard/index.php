@@ -5,6 +5,7 @@
 /** @var array $dokter */
 $base = BASE_URL;
 ?>
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/admin.css">
 
 <div class="section-header">
     <div>
@@ -12,28 +13,28 @@ $base = BASE_URL;
         <p class="page-title-note">Ringkasan data poli, dokter, pasien, dan antrean hari ini.</p>
     </div>
     <div class="section-actions">
-        <a class="button" href="<?= $base ?>/admin/loket">Buka Loket</a>
-        <a class="btn-secondary" href="<?= $base ?>/admin/walkin">Pendaftaran Walk-in</a>
+        <a class="btn btn-primary" href="<?= $base ?>/admin/loket">Buka Loket</a>
+        <a class="btn btn-secondary" href="<?= $base ?>/admin/walkin">Pendaftaran Walk-in</a>
     </div>
 </div>
 
 <div class="stats-grid">
-    <div class="stat-card"><span>Total Poli</span><strong><?= $stats['poli'] ?></strong></div>
-    <div class="stat-card"><span>Poli Buka</span><strong><?= $stats['poli_buka'] ?></strong></div>
-    <div class="stat-card"><span>Dokter Aktif</span><strong><?= $stats['dokter_aktif'] ?></strong></div>
-    <div class="stat-card"><span>Total Pasien</span><strong><?= $stats['pasien'] ?></strong></div>
-    <div class="stat-card"><span>Total Petugas</span><strong><?= $stats['petugas'] ?></strong></div>
-    <div class="stat-card"><span>Antrean Hari Ini</span><strong><?= $stats['antrean_hari_ini'] ?></strong></div>
+    <div class="stat-card"><span>Total Poli </span><strong><?= $stats['poli'] ?></strong></div>
+    <div class="stat-card"><span>Poli Buka </span><strong><?= $stats['poli_buka'] ?></strong></div>
+    <div class="stat-card"><span>Dokter Aktif </span><strong><?= $stats['dokter_aktif'] ?></strong></div>
+    <div class="stat-card"><span>Total Pasien </span><strong><?= $stats['pasien'] ?></strong></div>
+    <div class="stat-card"><span>Total Petugas </span><strong><?= $stats['petugas'] ?></strong></div>
+    <div class="stat-card"><span>Antrean Hari Ini </span><strong><?= $stats['antrean_hari_ini'] ?></strong></div>
 </div>
 
 <h2>Status Antrean Hari Ini</h2>
 <div class="stats-grid">
-    <div class="stat-card"><span>Menunggu</span><strong><?= $stats['menunggu'] ?></strong></div>
-    <div class="stat-card"><span>Dipanggil</span><strong><?= $stats['dipanggil'] ?></strong></div>
-    <div class="stat-card"><span>Diproses</span><strong><?= $stats['diproses'] ?></strong></div>
-    <div class="stat-card"><span>Selesai</span><strong><?= $stats['selesai'] ?></strong></div>
-    <div class="stat-card"><span>Dilewati</span><strong><?= $stats['dilewati'] ?></strong></div>
-    <div class="stat-card"><span>Batal</span><strong><?= $stats['batal'] ?></strong></div>
+    <div class="stat-card"><span>Menunggu </span><strong><?= $stats['menunggu'] ?></strong></div>
+    <div class="stat-card"><span>Dipanggil </span><strong><?= $stats['dipanggil'] ?></strong></div>
+    <div class="stat-card"><span>Diproses </span><strong><?= $stats['diproses'] ?></strong></div>
+    <div class="stat-card"><span>Selesai </span><strong><?= $stats['selesai'] ?></strong></div>
+    <div class="stat-card"><span>Dilewati </span><strong><?= $stats['dilewati'] ?></strong></div>
+    <div class="stat-card"><span>Batal </span><strong><?= $stats['batal'] ?></strong></div>
 </div>
 
 <h2>Antrean Hari Ini (<?= count($antrean) ?>)</h2>
