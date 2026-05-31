@@ -1,4 +1,5 @@
 <?php /** @var string $error */ /** @var string $email */ $base = BASE_URL; ?>
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/admin.css">
 
 <h1>Login Petugas</h1>
 <p class="page-title-note">Masuk sebagai admin, petugas, atau dokter.</p>
