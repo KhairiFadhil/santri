@@ -5,7 +5,6 @@
 /** @var array $dokter */
 $base = BASE_URL;
 ?>
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/admin.css">
 
 <div class="section-header">
     <div>

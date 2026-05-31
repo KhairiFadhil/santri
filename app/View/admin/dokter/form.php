@@ -3,7 +3,6 @@ $base = BASE_URL;
 $isEdit = ($mode ?? '') === 'edit';
 $action = $isEdit ? $base . '/admin/dokter/' . ($form['id'] ?? '') : $base . '/admin/dokter';
 ?>
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/admin.css">
 
 <div class="flex justify-between items-center mb-3">
     <div>
