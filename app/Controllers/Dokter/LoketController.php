@@ -37,13 +37,14 @@ class LoketController
         }
 
         View::render('dokter/loket/index', [
+            'title'   => 'Loket Dokter — SANTRI',
             'dokter'  => $infoDokter,
             'now'     => $now,
             'waiting' => $waiting,
             'selesai' => $selesai,
             'isBusy'  => Antrian::isDoctorBusy($doctorId, date('Y-m-d')),
             'isOff'   => Jadwal::isOff($doctorId, date('Y-m-d')),
-        ], 'dokter');
+        ]);
     }
 
     // dokter libur dadakan, tutup praktik hari ini
