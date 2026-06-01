@@ -65,7 +65,6 @@ $specialization = $dokter['specialization'] ?? 'Dokter';
     <title>Loket Dokter — SANTRI</title>
     <link rel="stylesheet" href="<?= $base ?>/assets/css/style.css">
     <style>
-        body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); }
         a { color: inherit; text-decoration: none; }
         .doctor-app { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
         .doctor-topbar {
@@ -75,11 +74,6 @@ $specialization = $dokter['specialization'] ?? 'Dokter';
             position: sticky; top: 0; z-index: 30;
         }
         .doctor-wordmark { display: flex; align-items: center; gap: 11px; color: var(--ink); }
-        .doctor-mark {
-            width: 38px; height: 38px; border-radius: 11px; background: var(--brand); color: #fff;
-            display: grid; place-items: center; font-weight: 900; letter-spacing: -.5px;
-            box-shadow: 0 8px 18px rgba(22,104,255,.22);
-        }
         .doctor-brand-title { font-size: 17px; line-height: 1.05; font-weight: 900; letter-spacing: -.3px; }
         .doctor-brand-sub { display: block; margin-top: 2px; color: var(--ink-4); font-size: 10.5px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; }
         .doctor-divider { height: 30px; width: 1px; background: var(--line); }
@@ -90,18 +84,8 @@ $specialization = $dokter['specialization'] ?? 'Dokter';
             display: flex; align-items: center; gap: 10px; padding: 5px 10px 5px 5px;
             border-radius: 12px; border: 1px solid var(--line); background: var(--surface);
         }
-        .doctor-avatar {
-            width: 34px; height: 34px; border-radius: 9px; background: var(--brand-50); color: var(--brand-700);
-            display: grid; place-items: center; font-weight: 900; font-size: 12px; flex-shrink: 0;
-        }
         .doctor-user-name { font-size: 13px; font-weight: 800; line-height: 1.12; color: var(--ink); }
         .doctor-user-role { font-size: 11px; color: var(--ink-3); line-height: 1.15; }
-        .doctor-icon-btn {
-            width: 40px; height: 40px; border-radius: 11px; border: 1px solid var(--line);
-            background: var(--surface); display: grid; place-items: center; color: var(--ink-3);
-            transition: .15s var(--ease);
-        }
-        .doctor-icon-btn:hover { background: var(--surface-3); color: var(--ink); }
         .doctor-scroll { flex: 1; padding: 26px; }
         .doctor-page { max-width: 1240px; margin: 0 auto; }
         .doctor-flash {
@@ -140,10 +124,6 @@ $specialization = $dokter['specialization'] ?? 'Dokter';
         .doctor-action-row { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
         .doctor-action-row form { margin: 0; display: inline-flex; }
         .doctor-action-row .btn-flex { flex: 1; }
-        .doctor-empty {
-            text-align: center; padding: 56px 20px; background: var(--surface-2); border: 1px dashed var(--line);
-            border-radius: var(--r-lg); color: var(--ink-3);
-        }
         .doctor-empty-symbol { font-family: var(--mono); font-size: 44px; font-weight: 900; color: var(--ink-4); line-height: 1; }
         .doctor-side-stack { display: flex; flex-direction: column; gap: 20px; }
         .doctor-list { padding: 8px; display: flex; flex-direction: column; gap: 4px; max-height: 320px; overflow-y: auto; }
@@ -199,7 +179,7 @@ $specialization = $dokter['specialization'] ?? 'Dokter';
 
     <header class="doctor-topbar">
         <a class="doctor-wordmark" href="<?= $base ?>/dokter/loket">
-            <span class="doctor-mark">S</span>
+            <?php $logoSize = 38; include __DIR__ . '/../../layout/_logo.php'; ?>
             <span>
                 <span class="doctor-brand-title">SANTRI</span>
                 <span class="doctor-brand-sub">Sistem Antrian RS</span>
@@ -227,14 +207,14 @@ $specialization = $dokter['specialization'] ?? 'Dokter';
             <?php endif; ?>
 
             <div class="doctor-userchip">
-                <div class="doctor-avatar"><?= $e($initial($doctorName)) ?></div>
+                <div class="avatar"><?= $e($initial($doctorName)) ?></div>
                 <div>
                     <div class="doctor-user-name"><?= $e($doctorName) ?></div>
                     <div class="doctor-user-role"><?= $e($poliName) ?></div>
                 </div>
             </div>
 
-            <a class="doctor-icon-btn" href="<?= $base ?>/admin/logout" title="Keluar">
+            <a class="admin-icon" href="<?= $base ?>/admin/logout" title="Keluar">
                 <?= $icon('logout', 18) ?>
             </a>
         </div>
@@ -294,7 +274,7 @@ $specialization = $dokter['specialization'] ?? 'Dokter';
                             </div>
 
                             <div class="doctor-patient-row">
-                                <div class="doctor-avatar"><?= $e($initial($now['patient_name'] ?? 'Pasien')) ?></div>
+                                <div class="avatar"><?= $e($initial($now['patient_name'] ?? 'Pasien')) ?></div>
                                 <div>
                                     <div class="doctor-patient-name"><?= $e($now['patient_name'] ?? '-') ?></div>
                                     <div class="doctor-patient-meta"><?= $e(($now['registered_via'] ?? 'online') === 'walkin' ? 'Pasien walk-in' : 'Pasien online') ?></div>
@@ -341,7 +321,7 @@ $specialization = $dokter['specialization'] ?? 'Dokter';
                                 <?php endif; ?>
                             </div>
                         <?php else: ?>
-                            <div class="doctor-empty">
+                            <div class="empty-state">
                                 <div class="doctor-empty-symbol">—</div>
                                 <div style="margin-top:8px">Tidak ada pasien dilayani.<br>Panggil pasien berikutnya dari daftar.</div>
                                 <?php if (!empty($firstWaiting) && empty($isOff)): ?>

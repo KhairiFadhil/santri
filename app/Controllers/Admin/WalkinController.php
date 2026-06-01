@@ -7,10 +7,8 @@ use App\Model\Antrian;
 use App\Model\Dokter;
 use App\Model\Poli;
 
-class WalkinController
+class WalkinController extends \App\Core\Controller
 {
-    private const BASE = '/santri-belajar/public';
-
     public function index(): void
     {
         View::render('admin/walkin/index', [
@@ -59,11 +57,7 @@ class WalkinController
                 'handled_by'     => $_SESSION['staff']['id'] ?? null,
             ]);
 
-            $_SESSION['flash'] = [
-                'kind' => 'ok',
-                'message' => 'Antrean walk-in berhasil dibuat: ' . $queue['ticket_code'],
-            ];
-
+            $this->flash('ok', 'Antrean walk-in berhasil dibuat: ' . $queue['ticket_code']);
             $this->redirect('/admin/walkin');
         } catch (\Throwable $e) {
             View::render('admin/walkin/index', [
@@ -128,11 +122,5 @@ class WalkinController
         }
 
         return $errors;
-    }
-
-    private function redirect(string $path): void
-    {
-        header('Location: ' . self::BASE . $path);
-        exit;
     }
 }

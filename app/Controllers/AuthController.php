@@ -3,15 +3,17 @@ namespace App\Controllers;
 
 use App\Core\View;
 use App\Model\User;
-
-class AuthController
+use App\Model\Antrian;
+class AuthController extends \App\Core\Controller
 {
     public function showLogin(): void
     {
+        $aktif = Antrian::liveQueue();
         View::render('auth/login', [
             'error' => '',
             'email' => '',
-        ], 'main');
+            'aktif' => $aktif,
+        ], 'auth');
     }
 
     public function login(): void
@@ -19,13 +21,14 @@ class AuthController
         // ambil input
         $email    = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
-
+        $aktif = Antrian::liveQueue();
         // ada yg kosong
         if (!$email || !$password) {
             View::render('auth/login', [
                 'error' => 'Email dan kata sandi wajib diisi.',
                 'email' => $email,
-            ], 'main');
+                'aktif' => $aktif
+            ], 'auth');
             return;
         }
 
@@ -37,7 +40,8 @@ class AuthController
             View::render('auth/login', [
                 'error' => 'Email atau kata sandi salah.',
                 'email' => $email,
-            ], 'main');
+                'aktif' => $aktif
+            ], 'auth');
             return;
         }
 
@@ -50,8 +54,7 @@ class AuthController
             'nik'   => $user['nik'],
         ];
 
-        header('Location: /santri-belajar/public/dashboard');
-        exit;
+        $this->redirect('/dashboard');
     }
 
     public function showRegister(): void
@@ -60,7 +63,7 @@ class AuthController
         View::render('auth/register', [
             'errors' => [],
             'form'   => $this->emptyForm(),
-        ], 'main');
+        ], 'auth');
     }
 
     public function register(): void
@@ -86,7 +89,7 @@ class AuthController
         }
 
         if ($errors) {
-            View::render('auth/register', compact('errors', 'form'), 'main');
+            View::render('auth/register', compact('errors', 'form'), 'auth');
             return;
         }
 
@@ -110,20 +113,17 @@ class AuthController
                 'email' => $user['email'],
                 'nik'   => $user['nik'],
             ];
-            $_SESSION['flash'] = ['kind' => 'ok', 'message' => 'Akun berhasil dibuat. Selamat datang!'];
-            header('Location: /santri-belajar/public/dashboard');
-            exit;
+            $this->flash('ok', 'Akun berhasil dibuat. Selamat datang!');
+            $this->redirect('/dashboard');
         }
 
         // fallback
-        $_SESSION['flash'] = ['kind' => 'ok', 'message' => 'Akun berhasil dibuat. Silakan masuk.'];
-        header('Location: /santri-belajar/public/login');
-        exit;
+        $this->flash('ok', 'Akun berhasil dibuat. Silakan masuk.');
+        $this->redirect('/login');
     }
 
     public function logout(): void
     {
-        // bersihin memory
         $_SESSION = [];
 
         // hapus cookie browser
@@ -138,8 +138,7 @@ class AuthController
         // destroy session
         session_destroy();
 
-        header('Location: /santri-belajar/public/login');
-        exit;
+        $this->redirect('/login');
     }
 
     // template field default

@@ -5,10 +5,8 @@ namespace App\Controllers\Admin;
 use App\Core\View;
 use App\Model\Staff;
 
-class AuthController
+class AuthController extends \App\Core\Controller
 {
-    private const BASE = '/santri-belajar/public';
-
     public function showLogin(): void
     {
         View::render('admin/auth/login', [
@@ -64,17 +62,7 @@ class AuthController
         }
 
         unset($_SESSION['staff']);
-        $_SESSION['flash'] = [
-            'kind' => 'ok',
-            'message' => 'Berhasil logout dari admin.',
-        ];
-
+        $this->flash('ok', 'Berhasil logout dari admin.');
         $this->redirect('/admin/login');
-    }
-
-    private function redirect(string $path): void
-    {
-        header('Location: ' . self::BASE . $path);
-        exit;
     }
 }

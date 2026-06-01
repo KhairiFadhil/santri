@@ -6,15 +6,14 @@ use App\Model\Antrian;
 use App\Model\Dokter;
 use App\Model\Jadwal;
 
-class AntreanController
+class AntreanController extends \App\Core\Controller
 {
     public function daftar(): void
     {
         $userId = $_SESSION['user']['id'];
 
         if (Antrian::getAntrianAktif($userId)) {
-            header('Location: /santri-belajar/public/antrean');
-            exit;
+            $this->redirect('/antrean');
         }
 
         $date = $_GET['schedule_date'] ?? date('Y-m-d');
@@ -31,7 +30,6 @@ class AntreanController
         ], 'main');
     }
 
-    // list dokter praktik + tempel sisa kuota tiap dokter
     private function doktersDenganKuota(string $date): array
     {
         $doctors = Jadwal::doktersOnDate($date);
@@ -49,8 +47,7 @@ class AntreanController
         $userId = $_SESSION['user']['id'];
 
         if (Antrian::getAntrianAktif($userId)) {
-            header('Location: /santri-belajar/public/antrean');
-            exit;
+            $this->redirect('/antrean');
         }
 
         $form = [
@@ -115,8 +112,7 @@ class AntreanController
             return;
         }
 
-        header('Location: /santri-belajar/public/antrean');
-        exit;
+        $this->redirect('/antrean');
     }
 
     public function status(): void
@@ -134,8 +130,7 @@ class AntreanController
         if ($queueId) {
             Antrian::batalAntrian($queueId, $userId);
         }
-        header('Location: /santri-belajar/public/dashboard');
-        exit;
+        $this->redirect('/dashboard');
     }
 
     public function riwayat(): void

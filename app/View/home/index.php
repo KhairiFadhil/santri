@@ -2,9 +2,11 @@
 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
   <div class="hero-grid">
     <div class="hero-text">
-        <h1 class="hero-title">Antre dari rumah,<br>datang tepat waktu.</h1>
+        <h1 class="hero-title">Antre dari rumah,<br>datang <span class="hl-key">tepat&nbsp;waktu</span>.</h1>
         <p class="hero-desc">Pilih dokter, ambil nomor antrean online, dan pantau posisi antrean Anda secara real-time. Tanpa antre panjang di rumah sakit.</p>
         <div class="hero-actions">
             <?php if (isset($_SESSION['user'])): ?>
@@ -18,16 +20,16 @@
     </div>
 
     <div class="hero-visual">
-        <div class="card hero-ticket">
+        <div class="card hero-ticket" id="hero-card">
             <div class="hero-ticket-top">
-                <span class="hero-ticket-label">Nomor Antrean Anda</span>
-                <span class="badge call"><i></i>Dipanggil</span>
+                <span class="hero-ticket-label" id="hero-label">Antrean Hari Ini</span>
+                <span class="badge call" id="hero-badge"><i></i>Live</span>
             </div>
-            <div class="mono hero-ticket-no">UMU-027</div>
-            <div class="hero-ticket-sub">Poli Umum &middot; dr. Ayu Larasati</div>
+            <div class="mono hero-ticket-no" id="hero-no">—</div>
+            <div class="hero-ticket-sub" id="hero-sub">Menunggu antrean dipanggil</div>
             <div class="hero-ticket-meta">
-                <div><div class="mono hero-ticket-mv">0</div><div class="hero-ticket-ml">antre di depan</div></div>
-                <div><div class="mono hero-ticket-mv">08:30</div><div class="hero-ticket-ml">jam praktik</div></div>
+                <div><div class="mono hero-ticket-mv" id="hero-wait">0</div><div class="hero-ticket-ml">pasien menunggu</div></div>
+                <div><div class="mono hero-ticket-mv" id="hero-poli">—</div><div class="hero-ticket-ml">poli</div></div>
             </div>
         </div>
     </div>
@@ -44,10 +46,10 @@
 
     <div id="live-board">
         <?php if (empty($live)): ?>
-            <p><em>Belum ada antrean aktif hari ini.</em></p>
+            <div class="live-empty">Belum ada antrean aktif hari ini.</div>
         <?php else: ?>
             <?php foreach ($live as $row): ?>
-                <div class="card card-pad live-card" data-doctor-id="<?= (int)$row['doctor_id'] ?>">
+                <div class="card card-pad live-card">
                     <div class="live-card-head">
                         <span class="tag mono"><?= htmlspecialchars($row['poli_code']) ?></span>
                         <span class="live-card-poli"><?= htmlspecialchars($row['poli_name']) ?></span>
@@ -64,7 +66,7 @@
 </section>
 
 <!-- POLI GRID -->
-<section class="home-sec home-sec-alt">
+<section id="poli" class="home-sec">
     <h2 class="home-sec-title">Poliklinik Tersedia</h2>
     <p class="home-sec-desc">Layanan poliklinik dengan dokter berpengalaman.</p>
     <?php if (empty($poli)): ?>
@@ -84,7 +86,7 @@
     <?php endif; ?>
 </section>
 
-<!-- CTA -->
+
 <section class="cta">
     <div class="cta-text">
         <h2>Siap mengantre lebih nyaman?</h2>
@@ -109,11 +111,13 @@
     const board = document.getElementById('live-board');
     const updatedAt = document.getElementById('live-updated');
     const endpoint = '<?= BASE_URL ?>/api/queue/live';
-
-    function card(row) {
+    let data = [];
+    let idx = 0;
+   
+    function liveCard(row) {
         const no = row.now_serving ? row.now_serving.ticket_code : '—';
         return `
-            <div class="card card-pad live-card" data-doctor-id="${row.doctor_id}">
+            <div class="card card-pad live-card">
                 <div class="live-card-head">
                     <span class="tag mono">${row.poli_code}</span>
                     <span class="live-card-poli">${row.poli_name}</span>
@@ -124,18 +128,67 @@
             </div>`;
     }
 
+    function renderHero() {
+        const label = document.getElementById('hero-label');
+        const no = document.getElementById('hero-no');
+        const sub = document.getElementById('hero-sub');
+        const wait = document.getElementById('hero-wait');
+        const poli = document.getElementById('hero-poli');
+        const badge = document.getElementById('hero-badge');
+
+        // utamakan yang sedang dipanggil; kalau tidak ada, tampilkan antrean berikutnya yang menunggu
+        const calling = data.filter(r => r.now_serving);
+        const pool = calling.length
+            ? calling
+            : data.filter(r => r.waiting > 0 || (r.next && r.next.length));
+
+        if (!pool.length) {
+            label.textContent = 'Antrean Hari Ini';
+            no.textContent = '—';
+            no.classList.add('off');
+            sub.textContent = 'Belum ada antrean aktif';
+            wait.textContent = '0';
+            poli.textContent = '—';
+            badge.style.display = 'none';
+            return;
+        }
+
+        if (idx >= pool.length) idx = 0;
+        const row = pool[idx];
+        idx++;
+
+        const isCalling = !!row.now_serving;
+        const code = isCalling
+            ? row.now_serving.ticket_code
+            : (row.next && row.next.length ? row.next[0].ticket_code : '—');
+
+        label.textContent = isCalling ? 'Sedang Dipanggil' : 'Antrean Berikutnya';
+        badge.style.display = '';
+        badge.className = 'badge ' + (isCalling ? 'call' : 'wait');
+        badge.innerHTML = '<i></i>' + (isCalling ? 'Dipanggil' : 'Menunggu');
+        no.textContent = code;
+        no.classList.toggle('off', code === '—');
+        sub.textContent = row.poli_name + ' · ' + row.doctor_name;
+        wait.textContent = row.waiting;
+        poli.textContent = row.poli_code;
+    }
+
     async function refresh() {
         try {
             const res = await fetch(endpoint, { cache: 'no-store' });
-            const data = await res.json();
-            if (!data.ok) return;
-            board.innerHTML = data.live.length
-                ? data.live.map(card).join('')
-                : '<p><em>Belum ada antrean aktif hari ini.</em></p>';
+            const json = await res.json();
+            if (!json.ok) return;
+            data = json.live;
+            board.innerHTML = data.length
+                ? data.map(liveCard).join('')
+                : '<div class="live-empty">Belum ada antrean aktif hari ini.</div>';
             updatedAt.textContent = new Date().toLocaleTimeString('id-ID');
+            renderHero();
         } catch (e) {}
     }
+
     refresh();
     setInterval(refresh, 5000);
+    setInterval(renderHero, 3000);
 })();
 </script>

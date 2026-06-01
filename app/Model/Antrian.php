@@ -211,24 +211,6 @@ class Antrian
         return $st->rowCount() > 0;
     }
 
-    public static function listActive(?int $poliId = null, ?string $status = null): array
-    {
-        $sql = "SELECT q.*, p.name AS poli_name, d.name AS doctor_name,
-                       COALESCE(u.name, q.walkin_name) AS patient_name
-                FROM queues q
-                JOIN poli p ON p.id = q.poli_id
-                JOIN doctors d ON d.id = q.doctor_id
-                LEFT JOIN users u ON u.id = q.user_id
-                WHERE q.status IN ('wait','call','progress')";
-        $params = [];
-        if ($poliId) { $sql .= ' AND q.poli_id = ?'; $params[] = $poliId; }
-        if ($status) { $sql .= ' AND q.status = ?'; $params[] = $status; }
-        $sql .= " ORDER BY q.schedule_date, FIELD(q.status,'call','progress','wait'), q.number ASC";
-        $st = db()->prepare($sql);
-        $st->execute($params);
-        return $st->fetchAll();
-    }
-
     public static function listHariIni(?int $poliId = null, ?string $status = null, ?int $doctorId = null): array
     {
         $sql = "SELECT q.*, p.name AS poli_name, d.name AS doctor_name,

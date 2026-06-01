@@ -23,15 +23,15 @@ class Dokter {
         return $r ?: null;
       }
 
-      public static function findByPoli(int $poliId): ?array
+      public static function findByPoli(int $poliId): array
       {
         $sql = 'SELECT * FROM doctors WHERE poli_id = ? AND is_active = 1 ORDER BY name';
         $st = db()->prepare($sql);
         $st->execute([$poliId]);
-        return $st->fetchAll();  
+        return $st->fetchAll();
       }
 
-    //   cth usage : 
+    //   cth usage :
     //   Dokter::create([
     //     'poli_id' => 2,
     //     'name' => 'Nama Dokter',

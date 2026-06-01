@@ -44,7 +44,6 @@ class QueueController
         ]);
     }
 
-    // dipakai home page buat polling live queue (no auth, public)
     public function live(): void
     {
         header('Content-Type: application/json; charset=utf-8');

@@ -4,10 +4,10 @@ $isEdit = ($mode ?? '') === 'edit';
 $action = $isEdit ? $base . '/admin/dokter/' . ($form['id'] ?? '') : $base . '/admin/dokter';
 ?>
 
-<div class="flex justify-between items-center mb-3">
+<div class="section-header">
     <div>
-        <h1 style="margin: 0; font-size: 24px;"><?= $isEdit ? 'Edit Dokter' : 'Tambah Dokter' ?></h1>
-        <p style="margin: 4px 0 0; color: var(--teks-3);">Lengkapi data dokter dan status praktik.</p>
+        <h1><?= $isEdit ? 'Edit Dokter' : 'Tambah Dokter' ?></h1>
+        <p class="page-title-note">Lengkapi data dokter dan status praktik.</p>
     </div>
     <div>
         <a class="btn btn-danger" href="<?= $base ?>/admin/dokter">Kembali</a>
@@ -52,8 +52,8 @@ $action = $isEdit ? $base . '/admin/dokter/' . ($form['id'] ?? '') : $base . '/a
             <input type="text" name="photo" class="form-control" value="<?= htmlspecialchars($form['photo'] ?? '') ?>" placeholder="Contoh: dokter-budi.jpg">
         </div>
         <div class="form-group mb-3">
-            <label class="flex items-center gap-1" style="cursor: pointer; font-weight: 600; color: var(--teks-2);">
-                <input type="checkbox" name="is_active" value="1" <?= !empty($form['is_active']) ? 'checked' : '' ?> style="width: 18px; height: 18px; accent-color: var(--accent);">
+            <label class="flex items-center gap-1" style="cursor: pointer; font-weight: 600; color: var(--ink-2);">
+                <input type="checkbox" name="is_active" value="1" <?= !empty($form['is_active']) ? 'checked' : '' ?> style="width: 18px; height: 18px; accent-color: var(--brand);">
                 Dokter Aktif (Bisa Praktik)
             </label>
         </div>

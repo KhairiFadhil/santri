@@ -11,6 +11,20 @@ $isHome = rtrim($uri, '/') === rtrim(BASE_URL, '/');
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
 </head>
 <body>
+    <div class="util-bar">
+        <div class="util-in">
+            <div class="util-left">
+                <span class="util-dot"></span>
+                Situs Resmi RSUD <?= HOSPITAL_NAME ?>
+            </div>
+            <div class="util-right">
+                <span><?= HOSPITAL_PHONE ?></span>
+                <span class="util-sep"></span>
+                <a href="<?= BASE_URL ?>/#kontak">Bantuan</a>
+                <a href="<?= BASE_URL ?>/#kontak">Lokasi</a>
+            </div>
+        </div>
+    </div>
     <header class="beranda">
         <div class="beranda-in">
             <a class="beranda-brand" href="<?= BASE_URL ?>/">
@@ -72,31 +86,52 @@ $isHome = rtrim($uri, '/') === rtrim(BASE_URL, '/');
     <?php endif; ?>
 
     <?php if ($isHome): ?>
-    <footer class="ft">
-        <div class="ft-in">
+    <footer class="foot">
+        <div class="foot-hair"></div>
+
+        <!-- TOP: brand + kontak + kolom link -->
+        <div class="foot-top">
             <div>
-                <div class="ft-brand">
-                    <?php $logoSize = 40; $logoPlain = true; $logoColor = '#fff'; include __DIR__ . '/_logo.php'; ?>
-                    <span class="ft-bname">SANTRI</span>
+                <div class="foot-brand-row">
+                    <?php $logoSize = 42; include __DIR__ . '/_logo.php'; ?>
+                    <div>
+                        <div class="foot-brand-name">SANTRI</div>
+                        <div class="foot-brand-sub">RS <?= HOSPITAL_NAME ?></div>
+                    </div>
                 </div>
-                <p class="ft-desc">Sistem antrian rumah sakit terintegrasi. Daftar online, pantau antrean real-time, datang tepat waktu.</p>
+                <p class="foot-desc">Sistem Antrian Rumah Sakit terintegrasi yang dikelola RS <?= HOSPITAL_NAME ?> untuk pelayanan kesehatan yang lebih cepat, tertib, dan nyaman bagi seluruh pasien.</p>
+                <div class="foot-contacts">
+                    <div class="foot-contact">
+                        <div class="foot-contact-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+                        <div><div class="foot-contact-l">Alamat</div><div class="foot-contact-v"><?= HOSPITAL_ADDRESS ?></div></div>
+                    </div>
+                    <div class="foot-contact">
+                        <div class="foot-contact-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5V20a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1Z"/></svg></div>
+                        <div><div class="foot-contact-l">Halo SANTRI</div><div class="foot-contact-v"><?= HOSPITAL_PHONE ?> · 24 jam, hari kerja</div></div>
+                    </div>
+                    <div class="foot-contact">
+                        <div class="foot-contact-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
+                        <div><div class="foot-contact-l">Email Resmi</div><div class="foot-contact-v"><?= HOSPITAL_EMAIL ?></div></div>
+                    </div>
+                </div>
             </div>
 
-            <div class="ft-col">
+            <div class="foot-col">
                 <h4>Layanan</h4>
-                <a href="<?= BASE_URL ?>/daftar">Daftar Antrean</a>
-                <a href="<?= BASE_URL ?>/">Antrean Live</a>
-            </div>
-
-            <div class="ft-col">
-                <h4>Kontak</h4>
-                <span><?= HOSPITAL_PHONE ?></span>
-                <span><?= HOSPITAL_EMAIL ?></span>
-                <span><?= HOSPITAL_ADDRESS ?></span>
+                <div class="foot-links">
+                    <a class="foot-link" href="<?= BASE_URL ?>/daftar">Daftar Antrean</a>
+                    <a class="foot-link" href="<?= BASE_URL ?>/#poli">Poliklinik</a>
+                    <a class="foot-link" href="<?= BASE_URL ?>/#live">Antrean Live</a>
+                    <a class="foot-link" href="<?= BASE_URL ?>/riwayat">Riwayat Kunjungan</a>
+                </div>
             </div>
         </div>
-        <div class="ft-bottom">
-            &copy; <?= date('Y') ?> <?= HOSPITAL_NAME ?> &middot; SANTRI — Sistem Antrian Rumah Sakit
+
+        <!-- BOTTOM: copyright -->
+        <div class="foot-botwrap">
+            <div class="foot-bot">
+                <div class="foot-copy">&copy; <?= date('Y') ?> <strong>RS <?= HOSPITAL_NAME ?></strong> · SANTRI — Sistem Antrian Rumah Sakit. Hak cipta dilindungi.</div>
+            </div>
         </div>
     </footer>
     <?php endif; ?>

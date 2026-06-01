@@ -4,10 +4,10 @@ $isEdit = ($mode ?? '') === 'edit';
 $action = $isEdit ? $base . '/admin/poli/' . ($form['id'] ?? '') : $base . '/admin/poli';
 ?>
 
-<div class="flex justify-between items-center mb-3">
+<div class="section-header">
     <div>
-        <h1 style="margin: 0; font-size: 24px;"><?= $isEdit ? 'Edit Poli' : 'Tambah Poli' ?></h1>
-        <p style="margin: 4px 0 0; color: var(--teks-3);">Isi data poli sesuai kebutuhan layanan rumah sakit.</p>
+        <h1><?= $isEdit ? 'Edit Poli' : 'Tambah Poli' ?></h1>
+        <p class="page-title-note">Isi data poli sesuai kebutuhan layanan rumah sakit.</p>
     </div>
     <div>
         <a class="btn btn-danger" href="<?= $base ?>/admin/poli">Kembali</a>
@@ -45,8 +45,8 @@ $action = $isEdit ? $base . '/admin/poli/' . ($form['id'] ?? '') : $base . '/adm
             <input type="text" name="icon" class="form-control" value="<?= htmlspecialchars($form['icon'] ?? 'Stethoscope') ?>">
         </div>
         <div class="form-group mb-3">
-            <label class="flex items-center gap-1" style="cursor: pointer; font-weight: 600; color: var(--teks-2);">
-                <input type="checkbox" name="is_open" value="1" <?= !empty($form['is_open']) ? 'checked' : '' ?> style="width: 18px; height: 18px; accent-color: var(--accent);">
+            <label class="flex items-center gap-1" style="cursor: pointer; font-weight: 600; color: var(--ink-2);">
+                <input type="checkbox" name="is_open" value="1" <?= !empty($form['is_open']) ? 'checked' : '' ?> style="width: 18px; height: 18px; accent-color: var(--brand);">
                 Poli Buka (Aktif)
             </label>
         </div>

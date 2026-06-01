@@ -4,10 +4,10 @@ namespace App\Controllers\Admin;
 
 use App\Core\View;
 use App\Model\Dokter;
+use App\Model\Jadwal;
 
-class JadwalController
+class JadwalController extends \App\Core\Controller
 {
-    private const BASE = '/santri-belajar/public';
     private const DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 
     public function index(): void
@@ -54,15 +54,7 @@ class JadwalController
             $this->redirect('/admin/jadwal');
         }
 
-        $sql = 'INSERT INTO schedules (doctor_id, day_of_week, time_start, time_end, capacity)
-                VALUES (?, ?, ?, ?, ?)
-                ON DUPLICATE KEY UPDATE
-                    time_start = VALUES(time_start),
-                    time_end = VALUES(time_end),
-                    capacity = VALUES(capacity)';
-
-        $st = db()->prepare($sql);
-        $st->execute([$doctorId, $hari, $start, $end, $capacity]);
+        Jadwal::upsert($doctorId, $hari, $start, $end, $capacity);
 
         $this->flash('ok', 'Jadwal dokter berhasil disimpan.');
         $this->redirect('/admin/jadwal');
@@ -78,8 +70,7 @@ class JadwalController
             $this->redirect('/admin/jadwal');
         }
 
-        $st = db()->prepare('DELETE FROM schedules WHERE doctor_id = ? AND day_of_week = ?');
-        $st->execute([$doctorId, $hari]);
+        Jadwal::delete($doctorId, $hari);
 
         $this->flash('ok', 'Jadwal dokter berhasil dihapus.');
         $this->redirect('/admin/jadwal');
@@ -127,16 +118,5 @@ class JadwalController
     private function validTime(string $time): bool
     {
         return preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $time) === 1;
-    }
-
-    private function flash(string $kind, string $message): void
-    {
-        $_SESSION['flash'] = compact('kind', 'message');
-    }
-
-    private function redirect(string $path): void
-    {
-        header('Location: ' . self::BASE . $path);
-        exit;
     }
 }

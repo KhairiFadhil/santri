@@ -1,16 +1,11 @@
 <?php
 
-define('APP_NAME',          'SANTRI');
 define('HOSPITAL_NAME',     'RS Medicaria');
 define('HOSPITAL_ADDRESS',  'Jl. Merpati Raya No. 14, Jakarta');
 define('HOSPITAL_PHONE',    '(021) 5550-1234');
 define('HOSPITAL_EMAIL',    'halo@medicaria.id');
 
 define('QUEUE_ETA_PER_PERSON',  3);
-define('QUEUE_SKIP_THRESHOLD',  3);
-define('QUEUE_SLOT_MINUTES',    30);
-define('NOTIFICATION_LEAD',     3);
-define('WALKIN_ENABLED',        true);
 
 define('BASE_URL', '/santri-belajar/public');
 

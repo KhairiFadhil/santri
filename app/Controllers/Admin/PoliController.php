@@ -5,10 +5,8 @@ namespace App\Controllers\Admin;
 use App\Core\View;
 use App\Model\Poli;
 
-class PoliController
+class PoliController extends \App\Core\Controller
 {
-    private const BASE = '/santri-belajar/public';
-
     public function index(): void
     {
         View::render('admin/poli/index', [
@@ -141,16 +139,5 @@ class PoliController
             $errors[] = 'Nama poli wajib diisi.';
         }
         return $errors;
-    }
-
-    private function flash(string $kind, string $message): void
-    {
-        $_SESSION['flash'] = compact('kind', 'message');
-    }
-
-    private function redirect(string $path): void
-    {
-        header('Location: ' . self::BASE . $path);
-        exit;
     }
 }

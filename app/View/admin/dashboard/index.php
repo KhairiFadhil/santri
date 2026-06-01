@@ -12,8 +12,7 @@ $base = BASE_URL;
         <p class="page-title-note">Ringkasan data poli, dokter, pasien, dan antrean hari ini.</p>
     </div>
     <div class="section-actions">
-        <a class="btn btn-primary" href="<?= $base ?>/admin/loket">Buka Loket</a>
-        <a class="btn btn-secondary" href="<?= $base ?>/admin/walkin">Pendaftaran Walk-in</a>
+        <a class="btn btn-primary" href="<?= $base ?>/admin/walkin">Pendaftaran Walk-in</a>
     </div>
 </div>
 
@@ -68,7 +67,6 @@ $base = BASE_URL;
 
 <h2>Menu Admin</h2>
 <div class="menu-grid">
-    <a class="menu-card" href="<?= $base ?>/admin/loket"><h3>Loket Pemanggilan</h3><p>Pantau antrean yang menunggu, dipanggil, dan diproses.</p></a>
     <a class="menu-card" href="<?= $base ?>/admin/antrean"><h3>Manajemen Antrean</h3><p>Filter dan cek daftar antrean pasien.</p></a>
     <a class="menu-card" href="<?= $base ?>/admin/walkin"><h3>Pendaftaran Walk-in</h3><p>Input antrean pasien yang datang langsung.</p></a>
     <a class="menu-card" href="<?= $base ?>/admin/poli"><h3>Kelola Poli</h3><p><?= count($poli) ?> data poli tersedia.</p></a>

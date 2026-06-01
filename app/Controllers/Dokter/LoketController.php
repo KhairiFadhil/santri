@@ -7,10 +7,8 @@ use App\Model\Antrian;
 use App\Model\Dokter;
 use App\Model\Jadwal;
 
-class LoketController
+class LoketController extends \App\Core\Controller
 {
-    private const BASE = '/santri-belajar/public';
-
     public function index(): void
     {
         $doctorId   = (int)($_SESSION['staff']['doctors_id'] ?? 0);
@@ -130,16 +128,5 @@ class LoketController
         $ok = Antrian::recall((int)$id, $doctorId);
         $this->flash($ok ? 'success' : 'warn', $ok ? 'Pasien dikembalikan ke antrean.' : 'Gagal panggil ulang.');
         $this->redirect('/dokter/loket');
-    }
-
-    private function flash(string $kind, string $message): void
-    {
-        $_SESSION['flash'] = compact('kind', 'message');
-    }
-
-    private function redirect(string $path): void
-    {
-        header('Location: ' . self::BASE . $path);
-        exit;
     }
 }

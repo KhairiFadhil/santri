@@ -5,10 +5,8 @@ namespace App\Controllers\Admin;
 use App\Core\View;
 use App\Model\User;
 
-class PasienController
+class PasienController extends \App\Core\Controller
 {
-    private const BASE = '/santri-belajar/public';
-
     public function index(): void
     {
         $keyword = trim($_GET['q'] ?? '');
@@ -28,8 +26,7 @@ class PasienController
             $this->redirect('/admin/pasien');
         }
 
-        $st = db()->prepare('DELETE FROM users WHERE id = ?');
-        $st->execute([$id]);
+        User::delete($id);
 
         $this->flash('ok', 'Data pasien berhasil dihapus.');
         $this->redirect('/admin/pasien');
@@ -45,16 +42,5 @@ class PasienController
         $st->execute([$like, $like, $like, $like]);
 
         return $st->fetchAll();
-    }
-
-    private function flash(string $kind, string $message): void
-    {
-        $_SESSION['flash'] = compact('kind', 'message');
-    }
-
-    private function redirect(string $path): void
-    {
-        header('Location: ' . self::BASE . $path);
-        exit;
     }
 }

@@ -30,22 +30,6 @@ class Jadwal
         return $ts ? self::DAYS[(int)date('w', $ts)] : 'Senin';
     }
 
-    public static function availableSlots(int $dokterId, string $date, int $intervalMin = 30): array
-    {
-        $sched = self::find($dokterId, self::dayName($date));
-        if (!$sched) return [];
-
-        $start = strtotime($sched['time_start']);
-        $end   = strtotime($sched['time_end']);
-        if (!$start || !$end || $start >= $end) return [];
-
-        $slots = [];
-        for ($cur = $start; $cur < $end; $cur += $intervalMin * 60) {
-            $slots[] = date('H:i', $cur);
-        }
-        return $slots;
-    }
-
     // sisa kuota dokter di tanggal tertentu (kuota = capacity jadwal hari itu)
     public static function sisaKuota(int $dokterId, string $date): array
     {
@@ -155,37 +139,5 @@ class Jadwal
         $st = db()->prepare($sql);
         $st->execute($params);
         return $st->fetchAll();
-    }
-
-    public static function weeklyGrid(): array
-    {
-        $sql = "SELECT d.id AS doctor_id, d.name, d.specialization,
-                       p.name AS poli_name,
-                       s.day_of_week, s.time_start, s.time_end
-                FROM doctors d
-                JOIN poli p ON p.id = d.poli_id
-                LEFT JOIN schedules s ON s.doctor_id = d.id
-                WHERE d.is_active = 1
-                ORDER BY p.id, d.name";
-        $rows = db()->query($sql)->fetchAll();
-
-        $grid = [];
-        foreach ($rows as $r) {
-            $key = $r['doctor_id'];
-            if (!isset($grid[$key])) {
-                $grid[$key] = [
-                    'doctor_id' => $r['doctor_id'],
-                    'name'      => $r['name'],
-                    'spec'      => $r['specialization'],
-                    'poli_name' => $r['poli_name'],
-                    'blocks'    => array_fill_keys(['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'], null),
-                ];
-            }
-            if ($r['day_of_week']) {
-                $grid[$key]['blocks'][$r['day_of_week']] =
-                    substr($r['time_start'], 0, 5) . '–' . substr($r['time_end'], 0, 5);
-            }
-        }
-        return array_values($grid);
     }
 }

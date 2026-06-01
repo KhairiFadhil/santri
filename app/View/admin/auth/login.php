@@ -13,7 +13,6 @@
             <label>Email</label>
             <input type="email" name="email" value="<?= htmlspecialchars($email) ?>" required>
         </p>
-
         <p>
             <label>Password</label>
             <input type="password" name="password" required>
@@ -21,7 +20,7 @@
 
         <div class="form-actions">
             <button type="submit">Masuk</button>
-            <a class="btn-secondary" href="<?= $base ?>/">Kembali</a>
+            <a class="btn" href="<?= $base ?>/">Kembali</a>
         </div>
     </form>
 </div>

@@ -5,7 +5,6 @@ $staff = $_SESSION['staff'] ?? ['name' => 'Admin', 'role' => 'staff'];
 $navOps = [
     ['admin',         'Dashboard', 'M4 4h7v7H4zM13 4h7v7h-7zM13 13h7v7h-7zM4 13h7v7H4z'],
     ['admin/antrean', 'Antrean',   'M12 3 2 8l10 5 10-5zM2 16l10 5 10-5M2 12l10 5 10-5'],
-    ['admin/loket',   'Loket',     'M3 11v2a1 1 0 0 0 1 1h2l4 4V6L6 10H4a1 1 0 0 0-1 1ZM15 8a4 4 0 0 1 0 8'],
     ['admin/walkin',  'Walk-in',   'M12 5v14M5 12h14'],
 ];
 $navData = [

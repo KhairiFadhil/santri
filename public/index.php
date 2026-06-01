@@ -45,7 +45,6 @@
         'GET /admin/logout' => ['App\Controllers\Admin\AuthController', 'logout'],
 
         'GET /admin'       => ['App\Controllers\Admin\DashboardController', 'index', 'staff'],
-        'GET /admin/loket' => ['App\Controllers\Admin\LoketController', 'index', 'staff'],
 
         'GET /admin/antrean' => ['App\Controllers\Admin\AntreanController', 'index', 'staff'],
 

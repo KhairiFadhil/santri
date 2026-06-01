@@ -5,22 +5,18 @@ namespace App\Controllers;
 use App\Core\View;
 use App\Model\User;
 
-class ProfileController
+class ProfileController extends \App\Core\Controller
 {
     public function index(): void
     {
         // ambil user dari db
         $id = $_SESSION['user']['id'] ?? null;
-        $user = User::findById((int)$id);
-
+        $user = User::findById($id) ?? '';
         View::render('profile/index', [
-            'user'   => $user,
-            'errors' => [],
-            'flash'  => $_SESSION['flash'] ?? null,
+            'user' => $user,
+            'errors' => null,
+            'flash' => null,
         ], 'main');
-
-        // hapus flash
-        unset($_SESSION['flash']);
     }
 
     public function update(): void
@@ -50,13 +46,10 @@ class ProfileController
         }
 
         User::update((int)$id, $data);
-
-        // sync session
         $_SESSION['user']['name'] = $data['name'];
 
-        $_SESSION['flash'] = ['kind' => 'ok', 'message' => 'Profil berhasil diperbarui.'];
-        header('Location: /santri-belajar/public/profile');
-        exit;
+        $this->flash('ok', 'Profil berhasil diperbarui.');
+        $this->redirect('/profile');
     }
 
     public function changePassword(): void
@@ -91,8 +84,7 @@ class ProfileController
 
         User::updatePassword((int)$id, $new);
 
-        $_SESSION['flash'] = ['kind' => 'ok', 'message' => 'Kata sandi berhasil diganti.'];
-        header('Location: /santri-belajar/public/profile');
-        exit;
+        $this->flash('ok', 'Kata sandi berhasil diganti.');
+        $this->redirect('/profile');
     }
 }
