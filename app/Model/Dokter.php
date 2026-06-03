@@ -31,14 +31,7 @@ class Dokter {
         return $st->fetchAll();
       }
 
-    //   cth usage :
-    //   Dokter::create([
-    //     'poli_id' => 2,
-    //     'name' => 'Nama Dokter',
-    //     'specialization' => 'Tipe Dokter',
-    //     'is_active' => true,
-    //   ]);
-      public static function create(array $data): int 
+      public static function create(array $data): int
       {
         $sql = 'INSERT INTO doctors (poli_id, name, specialization, photo, is_active)
                   VALUES (?, ?, ?, ?, ?)';
@@ -53,16 +46,6 @@ class Dokter {
         return (int)db()->lastInsertId();
       }
 
-    //   cth usage :  
-    //   {
-    //     Doctor::update(3, [
-    //         'poli_id' => 1,
-    //         'name' => 'Nama Baru',
-    //         'specialization' => 'Dokter Umum',
-    //         'is_active' => true,
-    //     ]);
-    //   }
-    
       public static function update(int $id, array $data): bool                                                                                        
       {
         $sql = '

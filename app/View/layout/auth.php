@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $title ?? 'SANTRI' ?></title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
-</head>
+    </head>
 <body>
     <?= $content ?>
 </body>

@@ -6,6 +6,7 @@ use App\Core\View;
 use App\Model\Antrian;
 use App\Model\Dokter;
 use App\Model\Poli;
+use App\Model\User;
 
 class WalkinController extends \App\Core\Controller
 {
@@ -42,8 +43,11 @@ class WalkinController extends \App\Core\Controller
             return;
         }
 
+        $akun = $form['walkin_nik'] !== '' ? User::findByNik($form['walkin_nik']) : null;
+
         try {
             $queue = Antrian::create([
+                'user_id'        => $akun['id'] ?? null,
                 'walkin_name'    => $form['walkin_name'],
                 'walkin_nik'     => $form['walkin_nik'] ?: null,
                 'walkin_phone'   => $form['walkin_phone'] ?: null,
@@ -115,6 +119,9 @@ class WalkinController extends \App\Core\Controller
 
         if ($form['schedule_date'] === '') {
             $errors[] = 'Tanggal antrean wajib diisi.';
+        } elseif ($form['schedule_date'] < date('Y-m-d')
+                  || $form['schedule_date'] > date('Y-m-d', strtotime('+3 days'))) {
+            $errors[] = 'Tanggal antrean harus antara hari ini sampai 3 hari ke depan.';
         }
 
         if (!in_array($form['insurance_type'], ['BPJS', 'Asuransi', 'Umum'], true)) {

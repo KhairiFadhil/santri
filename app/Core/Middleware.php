@@ -29,7 +29,6 @@ class Middleware
                     header('Location: /santri-belajar/public/admin/login');
                     exit;
                 }
-                // dokter bukan staff loket, lempar ke loketnya sendiri
                 if (($_SESSION['staff']['role'] ?? '') === 'dokter') {
                     header('Location: /santri-belajar/public/dokter/loket');
                     exit;

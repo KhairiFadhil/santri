@@ -184,7 +184,7 @@ class Antrian
         return $result;
     }
 
-    public static function setStatus(int $id, string $status, ?int $staffId = null): bool
+    public static function setStatus(int $id, string $status, int $doctorId, ?int $staffId = null): bool
     {
         $valid = ['wait','call','progress','done','skip','cancel'];
         if (!in_array($status, $valid, true)) {
@@ -199,8 +199,11 @@ class Antrian
         if ($status === 'done')     $sets[] = 'completed_at = NOW()';
 
         $params[] = $id;
-        $sql = 'UPDATE queues SET ' . implode(', ', $sets) . ' WHERE id = ?';
-        return db()->prepare($sql)->execute($params);
+        $params[] = $doctorId;
+        $sql = 'UPDATE queues SET ' . implode(', ', $sets) . ' WHERE id = ? AND doctor_id = ?';
+        $st = db()->prepare($sql);
+        $st->execute($params);
+        return $st->rowCount() > 0;
     }
 
     public static function batalAntrian(int $queueId, int $userId): bool

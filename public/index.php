@@ -5,7 +5,6 @@
     require __DIR__ . '/../config/app.php';
     require __DIR__ . '/../config/database.php';
 
-    // tutup antrean basi tiap request
     \App\Model\Antrian::expireStale();
 
     $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

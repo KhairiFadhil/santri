@@ -9,7 +9,7 @@ $isHome = rtrim($uri, '/') === rtrim(BASE_URL, '/');
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $title ?? 'SANTRI' ?></title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
-</head>
+    </head>
 <body>
     <div class="util-bar">
         <div class="util-in">
@@ -20,8 +20,7 @@ $isHome = rtrim($uri, '/') === rtrim(BASE_URL, '/');
             <div class="util-right">
                 <span><?= HOSPITAL_PHONE ?></span>
                 <span class="util-sep"></span>
-                <a href="<?= BASE_URL ?>/#kontak">Bantuan</a>
-                <a href="<?= BASE_URL ?>/#kontak">Lokasi</a>
+                <a href="<?= BASE_URL ?>/#lokasi">Lokasi</a>
             </div>
         </div>
     </div>
@@ -86,7 +85,7 @@ $isHome = rtrim($uri, '/') === rtrim(BASE_URL, '/');
     <?php endif; ?>
 
     <?php if ($isHome): ?>
-    <footer class="foot">
+    <footer class="foot" id="lokasi">
         <div class="foot-hair"></div>
 
         <!-- TOP: brand + kontak + kolom link -->

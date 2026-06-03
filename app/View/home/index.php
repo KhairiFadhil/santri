@@ -136,7 +136,7 @@
         const poli = document.getElementById('hero-poli');
         const badge = document.getElementById('hero-badge');
 
-        // utamakan yang sedang dipanggil; kalau tidak ada, tampilkan antrean berikutnya yang menunggu
+        // utamakan yang sedang dipanggil
         const calling = data.filter(r => r.now_serving);
         const pool = calling.length
             ? calling
