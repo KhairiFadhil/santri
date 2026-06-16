@@ -56,7 +56,7 @@ if (!function_exists('doctor_icon')) {
 if (!function_exists('doctor_initial')) {
     function doctor_initial(string $name): string
     {
-        $words = preg_split('/\s+/', trim(str_replace(['dr.', 'drg.'], '', strtolower($name))));
+        $words = explode(' ', trim(str_replace(['dr.', 'drg.'], '', strtolower($name))));
         $chars = '';
 
         foreach ($words as $w) {

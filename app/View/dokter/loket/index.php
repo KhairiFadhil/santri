@@ -12,7 +12,7 @@ $base = defined('BASE_URL') ? BASE_URL : '/santri-belajar/public';
 $today = function_exists('format_tanggal_id') ? format_tanggal_id(date('Y-m-d')) : date('l, d F Y');
 
 $doneOnly = array_values(array_filter($selesai ?? [], static fn($row) => ($row['status'] ?? '') === 'done'));
-$avgMinutes = defined('QUEUE_ETA_PER_PERSON') ? QUEUE_ETA_PER_PERSON * 3 : 9;
+$avgMinutes = defined('ANTRIAN_PERORANG') ? ANTRIAN_PERORANG * 3 : 9;
 $firstWaiting = !empty($waiting) ? $waiting[0] : null;
 $doctorName = $dokter['name'] ?? 'Dokter';
 $poliName = $dokter['poli_name'] ?? 'Poli';
