@@ -74,7 +74,7 @@ class AuthController extends \App\Core\Controller
 
         $errors = [];
         if (!$form['name'])                                      $errors[] = 'Nama wajib diisi.';
-        if (!preg_match('/^\d{16}$/', $form['nik']))             $errors[] = 'NIK harus 16 digit angka.';
+        if (strlen($form['nik']) !== 16 || !ctype_digit($form['nik'])) $errors[] = 'NIK harus 16 digit angka.';
         if (!filter_var($form['email'], FILTER_VALIDATE_EMAIL))  $errors[] = 'Format email tidak valid.';
         if (strlen($password) < 8)                               $errors[] = 'Password minimal 8 karakter.';
 

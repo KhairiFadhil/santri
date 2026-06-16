@@ -132,7 +132,7 @@ class PoliController extends \App\Core\Controller
     private function validate(array $form): array
     {
         $errors = [];
-        if (!preg_match('/^[A-Z]{1,3}$/', $form['code'])) {
+        if ($form['code'] === '' || strlen($form['code']) > 3 || !ctype_alpha($form['code'])) {
             $errors[] = 'Kode poli wajib 1 sampai 3 huruf kapital.';
         }
         if ($form['name'] === '') {

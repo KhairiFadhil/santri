@@ -118,7 +118,7 @@ class WalkinController extends \App\Core\Controller
             $errors[] = 'Nama pasien wajib diisi.';
         }
 
-        if ($form['walkin_nik'] !== '' && !preg_match('/^\d{16}$/', $form['walkin_nik'])) {
+        if ($form['walkin_nik'] !== '' && (strlen($form['walkin_nik']) !== 16 || !ctype_digit($form['walkin_nik']))) {
             $errors[] = 'NIK harus 16 digit angka.';
         }
 

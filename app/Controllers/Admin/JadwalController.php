@@ -152,8 +152,14 @@ class JadwalController extends \App\Core\Controller
         return array_values($grid);
     }
 
-    private function validTime(string $time): bool
+    private function validTime($time)
     {
-        return preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $time) === 1;
+        $bagian = explode(':', $time);
+        if (count($bagian) !== 2) return false;
+        if (!ctype_digit($bagian[0]) || !ctype_digit($bagian[1])) return false;
+
+        $jam = (int)$bagian[0];
+        $menit = (int)$bagian[1];
+        return $jam >= 0 && $jam <= 23 && $menit >= 0 && $menit <= 59;
     }
 }

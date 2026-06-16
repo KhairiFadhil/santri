@@ -139,11 +139,14 @@ class DokterController extends \App\Core\Controller
 
     private function bikinEmail(string $nama): string
     {
-        $kata = preg_split('/\s+/', strtolower($nama));
+        $kata = explode(' ', strtolower($nama));
         $bersih = [];
         foreach ($kata as $k) {
-            $k = preg_replace('/[^a-z0-9]/', '', $k);
-            if ($k !== '') $bersih[] = $k;
+            $hanyaHurufAngka = '';
+            for ($j = 0; $j < strlen($k); $j++) {
+                if (ctype_alnum($k[$j])) $hanyaHurufAngka .= $k[$j];
+            }
+            if ($hanyaHurufAngka !== '') $bersih[] = $hanyaHurufAngka;
             if (count($bersih) >= 2) break;
         }
         $awalan = implode('.', $bersih) ?: 'dokter';
