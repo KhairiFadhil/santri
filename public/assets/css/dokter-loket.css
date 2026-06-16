@@ -1,0 +1,548 @@
+a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        
+.doctor-app {
+            min-height: 100vh;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        
+.doctor-topbar {
+            height: 70px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, .92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 0 26px;
+            position: sticky;
+            top: 0;
+            z-index: 30;
+        }
+
+        .doctor-wordmark {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            color: var(--ink);
+        }
+
+        .doctor-brand-title {
+            font-size: 17px;
+            line-height: 1.05;
+            font-weight: 900;
+            letter-spacing: -.3px;
+        }
+
+        .doctor-brand-sub {
+            display: block;
+            margin-top: 2px;
+            color: var(--ink-4);
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+        }
+
+        .doctor-divider {
+            height: 30px;
+            width: 1px;
+            background: var(--line);
+        }
+
+        .doctor-page-title {
+            font-size: 15px;
+            font-weight: 850;
+            letter-spacing: -.2px;
+        }
+
+        .doctor-page-date {
+            font-size: 12.5px;
+            color: var(--ink-3);
+        }
+
+        .doctor-top-actions {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .doctor-userchip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 10px 5px 5px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: var(--surface);
+        }
+
+        .doctor-user-name {
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.12;
+            color: var(--ink);
+        }
+
+        .doctor-user-role {
+            font-size: 11px;
+            color: var(--ink-3);
+            line-height: 1.15;
+        }
+
+        .doctor-scroll {
+            flex: 1;
+            padding: 26px;
+        }
+
+        .doctor-page {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        .doctor-flash {
+            position: fixed;
+            top: 82px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 60;
+            background: var(--ink);
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 12px;
+            box-shadow: var(--sh-pop);
+            font-size: 13.5px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .doctor-flash svg {
+            color: #5be39a;
+        }
+
+        
+.doctor-stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .doctor-stat {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-lg);
+            box-shadow: var(--sh);
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-left: 0;
+        }
+
+        .doctor-stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+        }
+
+        .doctor-stat-value {
+            font-family: var(--mono);
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -.8px;
+            line-height: 1;
+            color: var(--ink);
+        }
+
+        .doctor-stat-value small {
+            font-size: 13px;
+            color: var(--ink-4);
+            font-weight: 700;
+        }
+
+        .doctor-stat-label {
+            font-size: 12.5px;
+            color: var(--ink-3);
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        
+.doctor-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 350px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .doctor-card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-lg);
+            box-shadow: var(--sh);
+            overflow: hidden;
+        }
+
+        .doctor-card-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 17px 22px;
+            border-bottom: 1px solid var(--line-2);
+        }
+
+        .doctor-card-head h2 {
+            font-size: 15.5px;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: -.2px;
+        }
+
+        .doctor-card-head .muted {
+            font-size: 12.5px;
+            color: var(--ink-3);
+            font-weight: 700;
+        }
+
+        .doctor-card-body {
+            padding: 26px;
+        }
+
+        
+.doctor-ticket-box {
+            background: var(--surface-2);
+            border: 1px solid var(--brand-100);
+            border-radius: var(--r-lg);
+            padding: 26px;
+            text-align: center;
+        }
+
+        .doctor-ticket-code {
+            font-family: var(--mono);
+            font-size: 60px;
+            font-weight: 900;
+            color: var(--brand);
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        .doctor-patient-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 22px 0 16px;
+        }
+
+        .doctor-patient-name {
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--ink);
+        }
+
+        .doctor-patient-meta {
+            font-size: 13px;
+            color: var(--ink-3);
+        }
+
+        .doctor-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .doctor-detail-item {
+            background: var(--surface-2);
+            border-radius: 11px;
+            padding: 11px 14px;
+            min-width: 0;
+        }
+
+        .doctor-detail-label {
+            font-size: 11.5px;
+            color: var(--ink-3);
+            font-weight: 700;
+        }
+
+        .doctor-detail-value {
+            font-size: 14px;
+            font-weight: 800;
+            margin-top: 2px;
+            color: var(--ink);
+            word-break: break-word;
+        }
+
+        
+.doctor-action-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+            flex-wrap: wrap;
+        }
+
+        .doctor-action-row form {
+            margin: 0;
+            display: inline-flex;
+        }
+
+        .doctor-action-row .btn-flex {
+            flex: 1;
+        }
+
+        .doctor-empty-symbol {
+            font-family: var(--mono);
+            font-size: 44px;
+            font-weight: 900;
+            color: var(--ink-4);
+            line-height: 1;
+        }
+
+        
+.doctor-side-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .doctor-list {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .doctor-list.done {
+            max-height: 225px;
+            gap: 2px;
+        }
+
+        .doctor-list-empty {
+            padding: 26px;
+            text-align: center;
+            color: var(--ink-4);
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .doctor-queue-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 11px;
+            border-radius: 11px;
+        }
+
+        .doctor-queue-item.first {
+            background: var(--call-bg);
+        }
+
+        .doctor-queue-no {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--ink-4);
+            width: 18px;
+            font-weight: 800;
+        }
+
+        .doctor-queue-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .doctor-queue-code {
+            font-family: var(--mono);
+            font-weight: 900;
+            font-size: 14px;
+            color: var(--ink);
+        }
+
+        .doctor-queue-sub {
+            font-size: 12px;
+            color: var(--ink-3);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .doctor-queue-actions {
+            margin: 0;
+        }
+
+        .doctor-queue-actions .btn {
+            padding: 8px 13px;
+            font-size: 12.5px;
+        }
+
+        .doctor-done-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 11px;
+            border-radius: 10px;
+        }
+
+        .doctor-done-code {
+            font-family: var(--mono);
+            font-weight: 900;
+            font-size: 13.5px;
+            color: var(--ink);
+        }
+
+        .doctor-done-name {
+            flex: 1;
+            font-size: 12.5px;
+            color: var(--ink-3);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .doctor-done-item form {
+            margin: 0;
+        }
+
+        .doctor-done-item .btn {
+            padding: 5px 9px;
+            font-size: 11.5px;
+        }
+
+        
+.doctor-off-note {
+            margin-bottom: 20px;
+            background: var(--call-bg);
+            color: var(--call);
+            border: 1px solid #fde68a;
+            border-radius: var(--r-lg);
+            padding: 14px 16px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-weight: 750;
+        }
+
+        .doctor-off-note svg {
+            flex-shrink: 0;
+        }
+
+        .badge {
+            text-transform: none;
+        }
+
+        .btn form {
+            margin: 0;
+        }
+
+        form {
+            margin: 0;
+        }
+
+        
+@media (max-width: 1100px) {
+            .doctor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .doctor-stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        
+@media (max-width: 760px) {
+            .doctor-topbar {
+                height: auto;
+                min-height: 70px;
+                padding: 12px 16px;
+                flex-wrap: wrap;
+            }
+
+            .doctor-divider,
+            .doctor-userchip {
+                display: none;
+            }
+
+            .doctor-top-actions {
+                width: 100%;
+                margin-left: 0;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .doctor-scroll {
+                padding: 16px;
+            }
+
+            .doctor-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .doctor-detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .doctor-ticket-code {
+                font-size: 44px;
+            }
+
+            .doctor-action-row,
+            .doctor-action-row form,
+            .doctor-action-row .btn {
+                width: 100%;
+            }
+
+            .doctor-action-row .btn-flex {
+                flex: unset;
+            }
+        }
+
+.stat-icon-wait {
+    background: var(--wait-bg);
+    color: var(--wait);
+}
+
+.stat-icon-progress {
+    background: var(--progress-bg);
+    color: var(--progress);
+}
+
+.stat-icon-done {
+    background: var(--done-bg);
+    color: var(--done);
+}
+
+.stat-icon-brand {
+    background: var(--brand-50);
+    color: var(--brand);
+}
+
+.ticket-badge-wrap {
+    margin-top: 12px;
+}
+
+.doctor-patient-tag {
+    margin-left: auto;
+}
+
+.empty-text {
+    margin-top: 8px;
+}
+
+.empty-call-form {
+    margin-top: 18px;
+    display: inline-flex;
+}
