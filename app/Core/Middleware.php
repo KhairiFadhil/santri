@@ -22,11 +22,26 @@ class Middleware
                     header('Location: /santri-belajar/public/admin/login');
                     exit;
                 }
-                if (($_SESSION['staff']['role'] ?? '') === 'dokter') {                                                                   
-                    header('Location: /santri-belajar/public/dokter/loket');                                                             
-                    exit;                                                                                                                                                                                                                                                            
+                if (($_SESSION['staff']['role'] ?? '') === 'dokter') {
+                    header('Location: /santri-belajar/public/dokter/loket');
+                    exit;
                 }
-                break;   
+                break;
+            case "admin":
+                if(!isset($_SESSION['staff'])){
+                    header('Location: /santri-belajar/public/admin/login');
+                    exit;
+                }
+                if (($_SESSION['staff']['role'] ?? '') === 'dokter') {
+                    header('Location: /santri-belajar/public/dokter/loket');
+                    exit;
+                }
+                if (($_SESSION['staff']['role'] ?? '') !== 'admin') {
+                    $_SESSION['flash'] = ['kind' => 'warn', 'message' => 'Halaman itu khusus admin.'];
+                    header('Location: /santri-belajar/public/admin');
+                    exit;
+                }
+                break;
             case "dokter":
                 if(!isset($_SESSION['staff']) || ($_SESSION['staff']['role'] ?? '') !== 'dokter') {
                     header('Location: /santri-belajar/public/admin/login');                                                              

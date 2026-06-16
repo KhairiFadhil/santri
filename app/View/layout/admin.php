@@ -1,16 +1,17 @@
 <?php
 $uri = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
 $staff = $_SESSION['staff'] ?? ['name' => 'Admin', 'role' => 'staff'];
+$isAdmin = ($staff['role'] ?? '') === 'admin';
 
 $navOps = [
     ['admin',         'Dashboard', 'M4 4h7v7H4zM13 4h7v7h-7zM13 13h7v7h-7zM4 13h7v7H4z'],
     ['admin/antrean', 'Antrean',   'M12 3 2 8l10 5 10-5zM2 16l10 5 10-5M2 12l10 5 10-5'],
     ['admin/walkin',  'Walk-in',   'M12 5v14M5 12h14'],
+    ['admin/jadwal',  'Jadwal',    'M4 5h16v16H4zM4 9h16M8 3v4M16 3v4'],
 ];
 $navData = [
     ['admin/poli',   'Poli',   'M6 3v6a4 4 0 0 0 8 0V3M5 3h2M13 3h2M10 13v3a5 5 0 0 0 10 0v-2M20 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z'],
     ['admin/dokter', 'Dokter', 'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM2 21a7 7 0 0 1 14 0M17 11a4 4 0 0 0 0-8M22 21a7 7 0 0 0-5-6.7'],
-    ['admin/jadwal', 'Jadwal', 'M4 5h16v16H4zM4 9h16M8 3v4M16 3v4'],
     ['admin/pasien', 'Pasien', 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4 21a8 8 0 0 1 16 0'],
 ];
 
@@ -47,8 +48,10 @@ $initial = strtoupper(substr(trim($staff['name'] ?? 'A'), 0, 1));
         <nav class="admin-nav">
             <div class="admin-sec">Operasional</div>
             <?php foreach ($navOps as $it) $navItem($it); ?>
+            <?php if ($isAdmin): ?>
             <div class="admin-sec">Master Data</div>
             <?php foreach ($navData as $it) $navItem($it); ?>
+            <?php endif; ?>
         </nav>
 
         <div class="admin-side-foot">
