@@ -11,13 +11,6 @@ class Staff
         return db()->query('SELECT * FROM staff ORDER BY role, name')->fetchAll();
     }
 
-    public static function findById(int $id): ?array
-    {
-        $st = db()->prepare('SELECT * FROM staff WHERE id = ?');
-        $st->execute([$id]);
-        return $st->fetch() ?: null;
-    }
-
     public static function findByEmail(string $email): ?array
     {
         $st = db()->prepare('SELECT * FROM staff WHERE email = ?');
@@ -25,16 +18,35 @@ class Staff
         return $st->fetch() ?: null;
     }
 
+    public static function findByDoctorId(int $doctorId): ?array
+    {
+        $st = db()->prepare('SELECT * FROM staff WHERE doctors_id = ? LIMIT 1');
+        $st->execute([$doctorId]);
+        return $st->fetch() ?: null;
+    }
+
+    public static function akunDokter(): array
+    {
+        $rows = db()->query("SELECT doctors_id, email, plain_password FROM staff WHERE role = 'dokter' AND doctors_id IS NOT NULL")->fetchAll();
+        $map = [];
+        foreach ($rows as $r) {
+            $map[(int)$r['doctors_id']] = ['email' => $r['email'], 'pw' => $r['plain_password']];
+        }
+        return $map;
+    }
+
     public static function create(array $data): int
     {
         $hash = password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 12]);
-        $st = db()->prepare('INSERT INTO staff (name, email, password_hash, role, status) VALUES (?, ?, ?, ?, ?)');
+        $st = db()->prepare('INSERT INTO staff (name, email, password_hash, plain_password, role, status, doctors_id) VALUES (?, ?, ?, ?, ?, ?, ?)');
         $st->execute([
             $data['name'],
             $data['email'],
             $hash,
+            $data['plain_password'] ?? null,
             $data['role'] ?? 'petugas',
             $data['status'] ?? 'offline',
+            $data['doctors_id'] ?? null,
         ]);
         return (int)db()->lastInsertId();
     }
@@ -72,7 +84,6 @@ class Staff
         if (!$s) return null;
         if (!password_verify($password, $s['password_hash'])) return null;
 
-        // set status online setelah login
         db()->prepare('UPDATE staff SET status = "online" WHERE id = ?')->execute([$s['id']]);
         return $s;
     }

@@ -9,7 +9,7 @@
         public function index()
         {
             $poli = Poli::all(true);
-            $live = Antrian::liveQueue();
+            $live = Antrian::antrianLive();
 
             View::render('home/index', [
                 "poli" => $poli,

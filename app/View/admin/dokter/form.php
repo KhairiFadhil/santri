@@ -25,7 +25,7 @@ $action = $isEdit ? $base . '/admin/dokter/' . ($form['id'] ?? '') : $base . '/a
 <?php endif; ?>
 
 <div class="card">
-    <form action="<?= $action ?>" method="post">        
+    <form action="<?= $action ?>" method="post">
         <div class="form-group mb-2">
             <label class="form-label">Poli</label>
             <select name="poli_id" class="form-control" required>
@@ -47,10 +47,6 @@ $action = $isEdit ? $base . '/admin/dokter/' . ($form['id'] ?? '') : $base . '/a
                 <input type="text" name="specialization" class="form-control" value="<?= htmlspecialchars($form['specialization'] ?? '') ?>" placeholder="Contoh: Spesialis Anak">
             </div>
         </div>
-        <div class="form-group mb-2">
-            <label class="form-label">Nama File Foto</label>
-            <input type="text" name="photo" class="form-control" value="<?= htmlspecialchars($form['photo'] ?? '') ?>" placeholder="Contoh: dokter-budi.jpg">
-        </div>
         <div class="form-group mb-3">
             <label class="flex items-center gap-1" style="cursor: pointer; font-weight: 600; color: var(--ink-2);">
                 <input type="checkbox" name="is_active" value="1" <?= !empty($form['is_active']) ? 'checked' : '' ?> style="width: 18px; height: 18px; accent-color: var(--brand);">
@@ -60,6 +56,6 @@ $action = $isEdit ? $base . '/admin/dokter/' . ($form['id'] ?? '') : $base . '/a
         <div class="flex gap-2 mt-3">
             <button type="submit" class="btn btn-primary">Simpan Data</button>
             <a class="btn btn-danger" href="<?= $base ?>/admin/dokter">Batal</a>
-        </div>        
+        </div>
     </form>
 </div>

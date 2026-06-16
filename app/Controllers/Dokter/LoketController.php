@@ -40,12 +40,12 @@ class LoketController extends \App\Core\Controller
             'now'     => $now,
             'waiting' => $waiting,
             'selesai' => $selesai,
-            'isBusy'  => Antrian::isDoctorBusy($doctorId, date('Y-m-d')),
-            'isOff'   => Jadwal::isOff($doctorId, date('Y-m-d')),
+            'isBusy'  => Antrian::dokterSibuk($doctorId, date('Y-m-d')),
+            'isOff'   => Jadwal::sedangLibur($doctorId, date('Y-m-d')),
         ]);
     }
 
-    // dokter libur dadakan, tutup praktik hari ini
+
     public function tutup(): void
     {
         $doctorId = (int)($_SESSION['staff']['doctors_id'] ?? 0);
@@ -54,7 +54,7 @@ class LoketController extends \App\Core\Controller
         $this->redirect('/dokter/loket');
     }
 
-    // buka lagi praktik hari ini
+
     public function buka(): void
     {
         $doctorId = (int)($_SESSION['staff']['doctors_id'] ?? 0);
@@ -68,13 +68,13 @@ class LoketController extends \App\Core\Controller
         $doctorId = (int)($_SESSION['staff']['doctors_id'] ?? 0);
         $staffId  = (int)($_SESSION['staff']['id'] ?? 0);
 
-        if (Antrian::isDoctorBusy($doctorId, date('Y-m-d'))) {
+        if (Antrian::dokterSibuk($doctorId, date('Y-m-d'))) {
             $this->flash('error', 'Selesaikan dulu pasien sekarang.');
             $this->redirect('/dokter/loket');
             return;
         }
         
-        if (!Antrian::setStatus((int)$id, 'call', (int)$doctorId, (int)$staffId)) {
+        if (!Antrian::ubahStatus((int)$id, 'call', (int)$doctorId, (int)$staffId)) {
             $this->flash('error', 'Antrean tidak ditemukan atau bukan milik Anda.');
             $this->redirect('/dokter/loket');
             return;
@@ -87,7 +87,7 @@ class LoketController extends \App\Core\Controller
     {
         $staffId  = (int)($_SESSION['staff']['id'] ?? 0);
         $doctorId = (int)($_SESSION['staff']['doctors_id'] ?? 0);
-        if (!Antrian::setStatus((int)$id, 'progress', $doctorId, $staffId)) {
+        if (!Antrian::ubahStatus((int)$id, 'progress', $doctorId, $staffId)) {
             $this->flash('error', 'Antrean bukan milik Anda.');
             $this->redirect('/dokter/loket');
             return;
@@ -100,7 +100,7 @@ class LoketController extends \App\Core\Controller
     {
         $staffId  = (int)($_SESSION['staff']['id'] ?? 0);
         $doctorId = (int)($_SESSION['staff']['doctors_id'] ?? 0);
-        if (!Antrian::setStatus((int)$id, 'done', $doctorId, $staffId)) {
+        if (!Antrian::ubahStatus((int)$id, 'done', $doctorId, $staffId)) {
             $this->flash('error', 'Antrean bukan milik Anda.');
             $this->redirect('/dokter/loket');
             return;
@@ -113,7 +113,7 @@ class LoketController extends \App\Core\Controller
     {
         $staffId  = (int)($_SESSION['staff']['id'] ?? 0);
         $doctorId = (int)($_SESSION['staff']['doctors_id'] ?? 0);
-        if (!Antrian::setStatus((int)$id, 'skip', $doctorId, $staffId)) {
+        if (!Antrian::ubahStatus((int)$id, 'skip', $doctorId, $staffId)) {
             $this->flash('error', 'Antrean bukan milik Anda.');
             $this->redirect('/dokter/loket');
             return;
@@ -127,15 +127,15 @@ class LoketController extends \App\Core\Controller
         $doctorId = (int)($_SESSION['staff']['doctors_id'] ?? 0);
         $staffId  = (int)($_SESSION['staff']['id'] ?? 0);
 
-        if (!Antrian::setStatus((int)$id, 'done', $doctorId, $staffId)) {
+        if (!Antrian::ubahStatus((int)$id, 'done', $doctorId, $staffId)) {
             $this->flash('error', 'Antrean bukan milik Anda.');
             $this->redirect('/dokter/loket');
             return;
         }
 
-        $next = Antrian::nextWaiting($doctorId, date('Y-m-d'));
+        $next = Antrian::antrianBerikutnya($doctorId, date('Y-m-d'));
         if ($next) {
-            Antrian::setStatus((int)$next['id'], 'call', $doctorId, $staffId);
+            Antrian::ubahStatus((int)$next['id'], 'call', $doctorId, $staffId);
             $this->flash('success', 'Selesai. Memanggil ' . $next['ticket_code'] . '.');
         } else {
             $this->flash('success', 'Pasien selesai. Tidak ada antrean lagi.');
@@ -143,7 +143,7 @@ class LoketController extends \App\Core\Controller
         $this->redirect('/dokter/loket');
     }
 
-    // panggil ulang pasien yg sempat di-skip
+
     public function recall($id): void
     {
         $doctorId = (int)($_SESSION['staff']['doctors_id'] ?? 0);

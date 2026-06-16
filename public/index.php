@@ -5,7 +5,7 @@
     require __DIR__ . '/../config/app.php';
     require __DIR__ . '/../config/database.php';
 
-    \App\Model\Antrian::expireStale();
+    \App\Model\Antrian::bersihkanBasi();
 
     $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     $method = $_SERVER['REQUEST_METHOD'];
@@ -63,6 +63,7 @@
         'GET /admin/dokter/{id}/edit'    => ['App\Controllers\Admin\DokterController', 'edit', 'staff'],
         'POST /admin/dokter/{id}'        => ['App\Controllers\Admin\DokterController', 'update', 'staff'],
         'POST /admin/dokter/{id}/delete' => ['App\Controllers\Admin\DokterController', 'delete', 'staff'],
+        'POST /admin/dokter/{id}/akun'   => ['App\Controllers\Admin\DokterController', 'akun', 'staff'],
 
         'GET /admin/jadwal'         => ['App\Controllers\Admin\JadwalController', 'index', 'staff'],
         'POST /admin/jadwal'        => ['App\Controllers\Admin\JadwalController', 'upsert', 'staff'],
@@ -104,13 +105,12 @@
         echo "<h1>404 Not Found</h1><p>{$method} {$uri}</p>";
         exit;
     }
-
     [$controllerClass, $controllerMethod] = $matched;
-
-    if (isset($matched[2])) {
+    if(isset($matched[2])){
         \App\Core\Middleware::run($matched[2]);
     }
-
     $controller = new $controllerClass();
-    call_user_func_array([$controller, $controllerMethod], $params);
+    call_user_func_array([$controller,$controllerMethod], $params)
+
+
 ?>

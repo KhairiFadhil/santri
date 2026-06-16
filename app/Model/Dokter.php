@@ -23,24 +23,15 @@ class Dokter {
         return $r ?: null;
       }
 
-      public static function findByPoli(int $poliId): array
-      {
-        $sql = 'SELECT * FROM doctors WHERE poli_id = ? AND is_active = 1 ORDER BY name';
-        $st = db()->prepare($sql);
-        $st->execute([$poliId]);
-        return $st->fetchAll();
-      }
-
       public static function create(array $data): int
       {
-        $sql = 'INSERT INTO doctors (poli_id, name, specialization, photo, is_active)
-                  VALUES (?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO doctors (poli_id, name, specialization, is_active)
+                  VALUES (?, ?, ?, ?)';
         $st = db()->prepare($sql);
         $st->execute([
             (int)$data['poli_id'],
             $data['name'],
             $data['specialization'] ?? null,
-            $data['photo'] ?? null,
             !empty($data['is_active']) ? 1 : 0,
         ]);
         return (int)db()->lastInsertId();

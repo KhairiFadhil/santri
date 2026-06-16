@@ -5,33 +5,23 @@ use PDO;
 
 class Antrian
 {
-    public static function nextNumber(int $doctorId, string $date): int
-    {
-        $st = db()->prepare('SELECT COALESCE(MAX(number),0)+1 FROM queues WHERE doctor_id = ? AND schedule_date = ?');
-        $st->execute([$doctorId, $date]);
-        return (int)$st->fetchColumn();
-    }
 
-    // bikin tiket.
     public static function create(array $data): array
     {
         $doctorId = (int)$data['doctor_id'];
         $poliId   = (int)$data['poli_id'];
-        $date     = $data['schedule_date'] ?? date('Y-m-d');
-        $time     = $data['schedule_time'] ?? null;
+        $tanggal  = $data['schedule_date'] ?? date('Y-m-d');
+        $waktu    = $data['schedule_time'] ?? null;
 
-        // 1 user 1 antrean aktif
-        if (!empty($data['user_id']) && self::getAntrianAktif((int)$data['user_id'])) {
+        if (!empty($data['user_id']) && self::antrianAktif((int)$data['user_id'])) {
             throw new \RuntimeException('Anda sudah punya antrean aktif.');
         }
 
-        // dokter lagi libur
-        if (Jadwal::isOff($doctorId, $date)) {
+        if (Jadwal::sedangLibur($doctorId, $tanggal)) {
             throw new \RuntimeException('Dokter sedang tidak praktik (libur) di tanggal tersebut.');
         }
 
-        // cek kuota
-        $kuota = Jadwal::sisaKuota($doctorId, $date);
+        $kuota = Jadwal::sisaKuota($doctorId, $tanggal);
         if (!$kuota['ada_jadwal']) {
             throw new \RuntimeException('Dokter tidak praktik di tanggal tersebut.');
         }
@@ -39,15 +29,13 @@ class Antrian
             throw new \RuntimeException('Kuota dokter untuk tanggal ini sudah penuh.');
         }
 
-        // kalau daftar hari ini, jangan sampai keburu tutup
-        if (!Jadwal::masihKeburu($doctorId, $date)) {
+        if (!Jadwal::masihKeburu($doctorId, $tanggal)) {
             throw new \RuntimeException('Perkiraan tidak terlayani hari ini, jam praktik hampir habis. Silakan pilih tanggal lain.');
         }
 
-        // prefix dari kode poli
         $poli = Poli::findById($poliId);
         if (!$poli) throw new \RuntimeException('Poli tidak ditemukan.');
-        $prefix = $poli['code'];
+        $awalan = $poli['code'];
 
         $sql = 'INSERT INTO queues
                   (ticket_code, number, user_id, walkin_name, walkin_nik, walkin_phone,
@@ -56,22 +44,22 @@ class Antrian
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         for ($try = 0; $try < 5; $try++) {
-            $number = self::nextNumber($doctorId, $date);
-            $ticket = $prefix . '-' . str_pad((string)$number, 3, '0', STR_PAD_LEFT);
+            $nomor  = self::nomorBerikutnya($doctorId, $tanggal);
+            $ticket = $awalan . '-' . str_pad((string)$nomor, 3, '0', STR_PAD_LEFT);
 
             try {
                 $st = db()->prepare($sql);
                 $st->execute([
                     $ticket,
-                    $number,
+                    $nomor,
                     $data['user_id'] ?? null,
                     $data['walkin_name'] ?? null,
                     $data['walkin_nik'] ?? null,
                     $data['walkin_phone'] ?? null,
                     $doctorId,
                     $poliId,
-                    $date,
-                    $time,
+                    $tanggal,
+                    $waktu,
                     $data['complaint'] ?? null,
                     'wait',
                     $data['insurance_type'] ?? 'Umum',
@@ -85,6 +73,14 @@ class Antrian
             }
         }
         throw new \RuntimeException('Gagal generate nomor antrean, coba lagi.');
+    }
+
+    public static function nomorBerikutnya(int $doctorId, string $tanggal): int
+    {
+        $sql = 'SELECT COALESCE(MAX(number),0) + 1 FROM queues WHERE doctor_id = ? and schedule_date = ?';
+        $st = db()->prepare($sql);
+        $st->execute([$doctorId, $tanggal]);
+        return (int)$st->fetchColumn();
     }
 
     public static function findById(int $id): ?array
@@ -101,7 +97,7 @@ class Antrian
         return $st->fetch() ?: null;
     }
 
-    public static function getAntrianAktif(int $userId): ?array
+    public static function antrianAktif(int $userId): ?array
     {
         $sql = "SELECT q.*, p.name AS poli_name, p.code AS poli_code, d.name AS doctor_name
                 FROM queues q
@@ -114,31 +110,29 @@ class Antrian
         return $st->fetch() ?: null;
     }
 
-    // info posisi antrean: berapa orang di depan + siapa yang lagi dipanggil
-    public static function frontStats(array $queue): array
+    public static function infoAntrian(array $queue): array
     {
         $st = db()->prepare("SELECT COUNT(*) FROM queues
             WHERE doctor_id = ? AND schedule_date = ?
               AND number < ? AND status IN ('wait','call','progress')");
         $st->execute([$queue['doctor_id'], $queue['schedule_date'], $queue['number']]);
-        $ahead = (int)$st->fetchColumn();
+        $didepan = (int)$st->fetchColumn();
 
         $st2 = db()->prepare("SELECT ticket_code, number FROM queues
             WHERE doctor_id = ? AND schedule_date = ? AND status IN ('call','progress')
             ORDER BY status='progress' DESC, called_at DESC LIMIT 1");
         $st2->execute([$queue['doctor_id'], $queue['schedule_date']]);
-        $current = $st2->fetch() ?: null;
+        $sekarang = $st2->fetch() ?: null;
 
         return [
-            'ahead'          => $ahead,
-            'eta_minutes'    => $ahead * (defined('QUEUE_ETA_PER_PERSON') ? QUEUE_ETA_PER_PERSON : 3),
-            'calling'        => $current ? $current['ticket_code'] : null,
-            'calling_number' => $current ? (int)$current['number'] : 0,
+            'ahead'          => $didepan,
+            'eta_minutes'    => $didepan * (defined('ANTRIAN_PERORANG') ? ANTRIAN_PERORANG : 3),
+            'calling'        => $sekarang ? $sekarang['ticket_code'] : null,
+            'calling_number' => $sekarang ? (int)$sekarang['number'] : 0,
         ];
     }
 
-    // dipakai home: semua dokter aktif hari ini + sekarang dipanggil + 3 next
-    public static function liveQueue(): array
+    public static function antrianLive(): array
     {
         $sql = "SELECT DISTINCT q.doctor_id, d.name AS doctor_name,
                        p.name AS poli_name, p.code AS poli_code
@@ -147,10 +141,10 @@ class Antrian
                 JOIN poli p    ON p.id = q.poli_id
                 WHERE q.schedule_date = CURDATE()
                 ORDER BY p.name, d.name";
-        $rows = db()->query($sql)->fetchAll();
+        $baris = db()->query($sql)->fetchAll();
 
-        $result = [];
-        foreach ($rows as $r) {
+        $hasil = [];
+        foreach ($baris as $r) {
             $doctorId = (int)$r['doctor_id'];
 
             $st = db()->prepare("SELECT ticket_code, number, status FROM queues
@@ -158,36 +152,36 @@ class Antrian
                   AND status IN ('call','progress')
                 ORDER BY FIELD(status,'progress','call'), called_at DESC LIMIT 1");
             $st->execute([$doctorId]);
-            $now = $st->fetch() ?: null;
+            $sekarang = $st->fetch() ?: null;
 
             $st2 = db()->prepare("SELECT ticket_code, number FROM queues
                 WHERE doctor_id = ? AND schedule_date = CURDATE() AND status = 'wait'
                 ORDER BY number ASC LIMIT 3");
             $st2->execute([$doctorId]);
-            $next = $st2->fetchAll();
+            $berikutnya = $st2->fetchAll();
 
             $st3 = db()->prepare("SELECT COUNT(*) FROM queues
                 WHERE doctor_id = ? AND schedule_date = CURDATE() AND status = 'wait'");
             $st3->execute([$doctorId]);
             $waiting = (int)$st3->fetchColumn();
 
-            $result[] = [
+            $hasil[] = [
                 'doctor_id'   => $doctorId,
                 'doctor_name' => $r['doctor_name'],
                 'poli_name'   => $r['poli_name'],
                 'poli_code'   => $r['poli_code'],
-                'now_serving' => $now,
-                'next'        => $next,
+                'now_serving' => $sekarang,
+                'next'        => $berikutnya,
                 'waiting'     => $waiting,
             ];
         }
-        return $result;
+        return $hasil;
     }
 
-    public static function setStatus(int $id, string $status, int $doctorId, ?int $staffId = null): bool
+    public static function ubahStatus(int $id, string $status, int $doctorId, ?int $staffId = null): bool
     {
-        $valid = ['wait','call','progress','done','skip','cancel'];
-        if (!in_array($status, $valid, true)) {
+        $sah = ['wait','call','progress','done','skip','cancel'];
+        if (!in_array($status, $sah, true)) {
             throw new \InvalidArgumentException("Status tidak valid: $status");
         }
 
@@ -245,28 +239,27 @@ class Antrian
         return (int)db()->query("SELECT COUNT(*) FROM queues WHERE schedule_date = CURDATE()")->fetchColumn();
     }
 
-    public static function isDoctorBusy(int $doctorId, string $date): bool
+    public static function dokterSibuk(int $doctorId, string $tanggal): bool
     {
         $sql = "SELECT COUNT(*) FROM queues
                 WHERE doctor_id = ? AND schedule_date = ?
                   AND status IN ('call','progress')";
         $stmt = db()->prepare($sql);
-        $stmt->execute([$doctorId, $date]);
+        $stmt->execute([$doctorId, $tanggal]);
         return (int)$stmt->fetchColumn() > 0;
     }
 
-    public static function nextWaiting(int $doctorId, string $date): ?array
+    public static function antrianBerikutnya(int $doctorId, string $tanggal): ?array
     {
         $sql = "SELECT * FROM queues
                 WHERE doctor_id = ? AND schedule_date = ? AND status = 'wait'
                 ORDER BY number ASC LIMIT 1";
         $stmt = db()->prepare($sql);
-        $stmt->execute([$doctorId, $date]);
+        $stmt->execute([$doctorId, $tanggal]);
         return $stmt->fetch() ?: null;
     }
 
-    // tutup antrean basi: yg masih aktif tapi tanggalnya udah lewat -> skip
-    public static function expireStale(): int
+    public static function bersihkanBasi(): int
     {
         $st = db()->prepare("UPDATE queues SET status = 'skip'
             WHERE status IN ('wait','call','progress') AND schedule_date < CURDATE()");
@@ -274,7 +267,6 @@ class Antrian
         return $st->rowCount();
     }
 
-    // panggil ulang pasien yg sempat di-skip -> balik ke wait
     public static function recall(int $id, int $doctorId): bool
     {
         $st = db()->prepare("UPDATE queues SET status = 'wait', handled_by = NULL,

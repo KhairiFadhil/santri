@@ -51,7 +51,7 @@ $initial = static function (string $name): string {
 
 $doneOnly = array_values(array_filter($selesai ?? [], static fn($row) => ($row['status'] ?? '') === 'done'));
 $skippedOnly = array_values(array_filter($selesai ?? [], static fn($row) => ($row['status'] ?? '') === 'skip'));
-$avgMinutes = defined('QUEUE_ETA_PER_PERSON') ? QUEUE_ETA_PER_PERSON * 3 : 9;
+$avgMinutes = defined('ANTRIAN_PERORANG') ? ANTRIAN_PERORANG * 3 : 9;
 $firstWaiting = !empty($waiting) ? $waiting[0] : null;
 $doctorName = $dokter['name'] ?? 'Dokter';
 $poliName = $dokter['poli_name'] ?? 'Poli';

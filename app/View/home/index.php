@@ -1,6 +1,5 @@
 <?php /** @var array $poli */ /** @var array $live */ ?>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-dots"></div>
   <div class="hero-glow"></div>
@@ -36,7 +35,6 @@
   </div>
 </section>
 
-<!-- LIVE BOARD -->
 <section id="live" class="home-sec">
     <div class="live-head">
         <span class="live-dot"></span>
@@ -65,7 +63,6 @@
     </div>
 </section>
 
-<!-- POLI GRID -->
 <section id="poli" class="home-sec">
     <h2 class="home-sec-title">Poliklinik Tersedia</h2>
     <p class="home-sec-desc">Layanan poliklinik dengan dokter berpengalaman.</p>
@@ -85,7 +82,6 @@
         </div>
     <?php endif; ?>
 </section>
-
 
 <section class="cta">
     <div class="cta-text">
@@ -113,7 +109,7 @@
     const endpoint = '<?= BASE_URL ?>/api/queue/live';
     let data = [];
     let idx = 0;
-   
+
     function liveCard(row) {
         const no = row.now_serving ? row.now_serving.ticket_code : '—';
         return `
@@ -136,7 +132,6 @@
         const poli = document.getElementById('hero-poli');
         const badge = document.getElementById('hero-badge');
 
-        // utamakan yang sedang dipanggil
         const calling = data.filter(r => r.now_serving);
         const pool = calling.length
             ? calling

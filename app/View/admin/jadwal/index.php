@@ -72,7 +72,7 @@
                 <tr>
                     <td><strong><?= htmlspecialchars($row['name'] ?? '') ?></strong></td>
                     <td><span class="badge badge-success"><?= htmlspecialchars($row['poli_name'] ?? '') ?></span></td>
-                    
+
                     <?php foreach (($days ?? []) as $day): ?>
                         <td class="text-center" style="vertical-align: top;">
                             <?php $block = $row['blocks'][$day] ?? null; ?>

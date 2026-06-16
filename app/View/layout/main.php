@@ -88,7 +88,7 @@ $isHome = rtrim($uri, '/') === rtrim(BASE_URL, '/');
     <footer class="foot" id="lokasi">
         <div class="foot-hair"></div>
 
-        <!-- TOP: brand + kontak + kolom link -->
+        
         <div class="foot-top">
             <div>
                 <div class="foot-brand-row">
@@ -126,7 +126,7 @@ $isHome = rtrim($uri, '/') === rtrim(BASE_URL, '/');
             </div>
         </div>
 
-        <!-- BOTTOM: copyright -->
+        
         <div class="foot-botwrap">
             <div class="foot-bot">
                 <div class="foot-copy">&copy; <?= date('Y') ?> <strong>RS <?= HOSPITAL_NAME ?></strong> · SANTRI — Sistem Antrian Rumah Sakit. Hak cipta dilindungi.</div>

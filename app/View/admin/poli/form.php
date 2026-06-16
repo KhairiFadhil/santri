@@ -25,7 +25,7 @@ $action = $isEdit ? $base . '/admin/poli/' . ($form['id'] ?? '') : $base . '/adm
 <?php endif; ?>
 
 <div class="card">
-    <form action="<?= $action ?>" method="post">        
+    <form action="<?= $action ?>" method="post">
         <div class="flex gap-2 mb-2">
             <div class="form-group" style="flex: 1;">
                 <label class="form-label">Kode Poli</label>
@@ -53,6 +53,6 @@ $action = $isEdit ? $base . '/admin/poli/' . ($form['id'] ?? '') : $base . '/adm
         <div class="flex gap-2 mt-3">
             <button type="submit" class="btn btn-primary">Simpan Data</button>
             <a class="btn btn-danger" href="<?= $base ?>/admin/poli">Batal</a>
-        </div>        
+        </div>
     </form>
 </div>

@@ -1,7 +1,7 @@
 <?php /** @var array $errors */ /** @var array $form */ ?>
 
 <div class="auth">
-    <!-- panel brand -->
+
     <div class="auth-brand">
         <a class="auth-logo" href="<?= BASE_URL ?>/">
             <?php $logoSize = 42; $logoPlain = true; $logoColor = '#fff'; include __DIR__ . '/../layout/_logo.php'; ?>
@@ -16,7 +16,6 @@
         <span class="auth-blob auth-blob-2"></span>
     </div>
 
-    <!-- panel form -->
     <div class="auth-form">
         <div class="auth-form-top">
             <a class="btn btn-ghost" href="<?= BASE_URL ?>/">&larr; Beranda</a>

@@ -12,7 +12,7 @@ class AntreanController extends \App\Core\Controller
     {
         $userId = $_SESSION['user']['id'];
 
-        if (Antrian::getAntrianAktif($userId)) {
+        if (Antrian::antrianAktif($userId)) {
             $this->redirect('/antrean');
         }
 
@@ -26,13 +26,13 @@ class AntreanController extends \App\Core\Controller
             'doctors' => $this->doktersDenganKuota($date),
             'errors'  => [],
             'form'    => ['doctor_id' => '', 'complaint' => '', 'schedule_date' => $date],
-            'hari'    => Jadwal::dayName($date),
+            'hari'    => Jadwal::namaHari($date),
         ], 'main');
     }
 
     private function doktersDenganKuota(string $date): array
     {
-        $doctors = Jadwal::doktersOnDate($date);
+        $doctors = Jadwal::dokterPraktik($date);
         foreach ($doctors as &$d) {
             $k = Jadwal::sisaKuota((int)$d['id'], $date);
             $d['sisa'] = $k['sisa'];
@@ -46,7 +46,7 @@ class AntreanController extends \App\Core\Controller
     {
         $userId = $_SESSION['user']['id'];
 
-        if (Antrian::getAntrianAktif($userId)) {
+        if (Antrian::antrianAktif($userId)) {
             $this->redirect('/antrean');
         }
 
@@ -72,7 +72,7 @@ class AntreanController extends \App\Core\Controller
             if (!$dokter) {
                 $errors[] = 'Dokter tidak ditemukan.';
             } else {
-                $jadwal = Jadwal::find((int)$form['doctor_id'], Jadwal::dayName($form['schedule_date']));
+                $jadwal = Jadwal::find((int)$form['doctor_id'], Jadwal::namaHari($form['schedule_date']));
                 if (!$jadwal) {
                     $errors[] = 'Dokter tidak praktik pada tanggal tersebut.';
                 } elseif ($form['schedule_date'] === date('Y-m-d') && $jadwal['time_end'] <= date('H:i:s')) {
@@ -86,7 +86,7 @@ class AntreanController extends \App\Core\Controller
                 'doctors' => $this->doktersDenganKuota($form['schedule_date']),
                 'errors'  => $errors,
                 'form'    => $form,
-                'hari'    => Jadwal::dayName($form['schedule_date']),
+                'hari'    => Jadwal::namaHari($form['schedule_date']),
             ], 'main');
             return;
         }
@@ -107,7 +107,7 @@ class AntreanController extends \App\Core\Controller
                 'doctors' => $this->doktersDenganKuota($form['schedule_date']),
                 'errors'  => [$e->getMessage()],
                 'form'    => $form,
-                'hari'    => Jadwal::dayName($form['schedule_date']),
+                'hari'    => Jadwal::namaHari($form['schedule_date']),
             ], 'main');
             return;
         }
@@ -119,7 +119,7 @@ class AntreanController extends \App\Core\Controller
     {
         $userId = $_SESSION['user']['id'];
         View::render('antrean/status', [
-            'antrean' => Antrian::getAntrianAktif($userId),
+            'antrean' => Antrian::antrianAktif($userId),
         ], 'main');
     }
 

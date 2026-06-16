@@ -21,6 +21,7 @@
             <th>Spesialis</th>
             <th>Poli</th>
             <th>Status</th>
+            <th>Akun Login</th>
             <th>Aksi</th>
         </tr>
     </thead>
@@ -32,6 +33,16 @@
                 <td><?= htmlspecialchars($row['specialization'] ?? '') ?></td>
                 <td><?= htmlspecialchars($row['poli_name'] ?? '') ?></td>
                 <td><span class="badge <?= !empty($row['is_active']) ? 'badge-success' : 'badge-muted' ?>"><?= !empty($row['is_active']) ? 'Aktif' : 'Tidak Aktif' ?></span></td>
+                <td>
+                    <?php if (!empty($akun[$row['id']])): ?>
+                        <?= htmlspecialchars($akun[$row['id']]['email']) ?><br>
+                        Pass: <?= htmlspecialchars($akun[$row['id']]['pw'] ?? '-') ?>
+                    <?php else: ?>
+                        <form action="<?= $base ?>/admin/dokter/<?= $row['id'] ?>/akun" method="post">
+                            <button type="submit" onclick="return confirm('Buat akun untuk dokter ini?')" class="btn btn-ghost">Generate Akun</button>
+                        </form>
+                    <?php endif; ?>
+                </td>
                 <td>
                     <div class="action-group">
                         <a href="<?= $base ?>/admin/dokter/<?= $row['id'] ?>/edit" class="btn btn-primary">Edit</a>

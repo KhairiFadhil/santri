@@ -9,7 +9,7 @@ class ProfileController extends \App\Core\Controller
 {
     public function index(): void
     {
-        // ambil user dari db
+
         $id = $_SESSION['user']['id'] ?? null;
         $user = User::findById($id) ?? '';
         View::render('profile/index', [
@@ -24,19 +24,17 @@ class ProfileController extends \App\Core\Controller
         $id = $_SESSION['user']['id'] ?? null;
         $user = User::findById((int)$id);
 
-        // input
         $data = [
             'name'  => trim($_POST['name'] ?? ''),
             'phone' => trim($_POST['phone'] ?? ''),
             'birth' => trim($_POST['birth'] ?? '') ?: null,
         ];
 
-        // validasi
         $errors = [];
         if (!$data['name']) $errors[] = 'Nama wajib diisi.';
 
         if ($errors) {
-            // sticky form
+
             View::render('profile/index', [
                 'user'   => array_merge($user, $data),
                 'errors' => $errors,
@@ -56,15 +54,12 @@ class ProfileController extends \App\Core\Controller
     {
         $id = $_SESSION['user']['id'] ?? null;
 
-        // input
         $current = $_POST['current_password'] ?? '';
         $new     = $_POST['new_password']     ?? '';
         $confirm = $_POST['confirm_password'] ?? '';
 
-        // butuh password_hash dari db
         $user = User::findById((int)$id);
 
-        // validasi
         $errors = [];
         if (!$current)                                            $errors[] = 'Kata sandi saat ini wajib diisi.';
         if (!$new)                                                $errors[] = 'Kata sandi baru wajib diisi.';

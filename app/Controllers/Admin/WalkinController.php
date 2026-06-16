@@ -5,7 +5,7 @@ namespace App\Controllers\Admin;
 use App\Core\View;
 use App\Model\Antrian;
 use App\Model\Dokter;
-use App\Model\Poli;
+use App\Model\Jadwal;
 use App\Model\User;
 
 class WalkinController extends \App\Core\Controller
@@ -15,8 +15,7 @@ class WalkinController extends \App\Core\Controller
         View::render('admin/walkin/index', [
             'errors' => [],
             'form' => $this->emptyForm(),
-            'doctors' => Dokter::all(true),
-            'poli' => Poli::all(true),
+            'doctors' => $this->doktersHariIni(),
         ], 'admin');
     }
 
@@ -37,8 +36,7 @@ class WalkinController extends \App\Core\Controller
             View::render('admin/walkin/index', [
                 'errors' => $errors,
                 'form' => $form,
-                'doctors' => Dokter::all(true),
-                'poli' => Poli::all(true),
+                'doctors' => $this->doktersHariIni(),
             ], 'admin');
             return;
         }
@@ -67,10 +65,21 @@ class WalkinController extends \App\Core\Controller
             View::render('admin/walkin/index', [
                 'errors' => [$e->getMessage()],
                 'form' => $form,
-                'doctors' => Dokter::all(true),
-                'poli' => Poli::all(true),
+                'doctors' => $this->doktersHariIni(),
             ], 'admin');
         }
+    }
+
+    private function doktersHariIni(): array
+    {
+        $tanggal = date('Y-m-d');
+        $dokter = Jadwal::dokterPraktik($tanggal);
+        foreach ($dokter as $i => $d) {
+            $kuota = Jadwal::sisaKuota((int)$d['id'], $tanggal);
+            $dokter[$i]['sisa'] = $kuota['sisa'];
+            $dokter[$i]['penuh'] = $kuota['penuh'];
+        }
+        return $dokter;
     }
 
     private function emptyForm(): array

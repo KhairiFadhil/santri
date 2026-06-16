@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use App\Core\View;
 use App\Model\Dokter;
 use App\Model\Poli;
+use App\Model\Staff;
 
 class DokterController extends \App\Core\Controller
 {
@@ -13,6 +14,7 @@ class DokterController extends \App\Core\Controller
         View::render('admin/dokter/index', [
             'rows' => Dokter::all(false),
             'poli' => Poli::all(),
+            'akun' => Staff::akunDokter(),
         ], 'admin');
     }
 
@@ -104,13 +106,73 @@ class DokterController extends \App\Core\Controller
         $this->redirect('/admin/dokter');
     }
 
+    public function akun($id): void
+    {
+        $id = (int)$id;
+        $dokter = Dokter::findById($id);
+
+        if (!$dokter) {
+            $this->flash('warn', 'Data dokter tidak ditemukan.');
+            $this->redirect('/admin/dokter');
+        }
+
+        if (Staff::findByDoctorId($id)) {
+            $this->flash('warn', 'Dokter ini sudah memiliki akun login.');
+            $this->redirect('/admin/dokter');
+        }
+
+        $email = $this->bikinEmail($dokter['name']);
+        $sandi = $this->sandiAcak();
+
+        Staff::create([
+            'name' => $dokter['name'],
+            'email' => $email,
+            'password' => $sandi,
+            'plain_password' => $sandi,
+            'role' => 'dokter',
+            'doctors_id' => $id,
+        ]);
+
+        $this->flash('ok', 'Akun dokter dibuat.');
+        $this->redirect('/admin/dokter');
+    }
+
+    private function bikinEmail(string $nama): string
+    {
+        $kata = preg_split('/\s+/', strtolower($nama));
+        $bersih = [];
+        foreach ($kata as $k) {
+            $k = preg_replace('/[^a-z0-9]/', '', $k);
+            if ($k !== '') $bersih[] = $k;
+            if (count($bersih) >= 2) break;
+        }
+        $awalan = implode('.', $bersih) ?: 'dokter';
+        $email = $awalan . '@medicaria.id';
+        $nomor = 2;
+        while (Staff::findByEmail($email)) {
+            $email = $awalan . $nomor . '@medicaria.id';
+            $nomor++;
+        }
+        return $email;
+    }
+
+    private function sandiAcak(int $panjang = 8): string
+    {
+        $karakter = 'abcdefghjkmnpqrstuvwxyz23456789';
+        $batas = strlen($karakter) - 1;
+        $sandi = '';
+        for ($i = 0; $i < $panjang; $i++) {
+            $sandi .= $karakter[random_int(0, $batas)];
+        }
+        return $sandi;
+    }
+
     private function emptyForm(): array
     {
         return [
             'poli_id' => '',
             'name' => '',
             'specialization' => '',
-            'photo' => '',
             'is_active' => 1,
         ];
     }
@@ -121,7 +183,6 @@ class DokterController extends \App\Core\Controller
             'poli_id' => (int)($_POST['poli_id'] ?? 0),
             'name' => trim($_POST['name'] ?? ''),
             'specialization' => trim($_POST['specialization'] ?? ''),
-            'photo' => trim($_POST['photo'] ?? ''),
             'is_active' => isset($_POST['is_active']) ? 1 : 0,
         ];
     }

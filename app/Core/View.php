@@ -13,18 +13,17 @@
             }
         }
 
-        public static function capture(string $name, array $data = []): string
+        public static function capture(string $view, array $data):  string
         {
-            $file = __DIR__ . '/../View/' . $name . '.php';
-            if (!file_exists($file)) {
-                throw new \RuntimeException("View tidak ada: {$name}");
+            $file = __DIR__ . "/../View/" . $view . ".php";
+            if(!file_exists($file)){
+                throw new \RuntimeException("View tidak ada: {$view}");
             }
-
             extract($data, EXTR_SKIP);
-
             ob_start();
             require $file;
             return ob_get_clean();
         }
     }
+
 ?>

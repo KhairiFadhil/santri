@@ -1,10 +1,9 @@
-<?php 
-    spl_autoload_register(function($class) {
-        $relative = str_replace('App\\', '', $class);
-        $path = str_replace('\\', '/', $relative);
-        $file = __DIR__ . '/../' . $path . ".php";
-        if(file_exists($file)){
-            require_once $file;
-        }
-    });
+<?php
+spl_autoload_register(function($class){
+    $class = str_replace('\\','/',str_replace('App\\', '', $class));
+    $file =  __DIR__ . "/../" . $class . ".php";
+    if(file_exists($file)){
+        require_once($file);
+    }
+})
 ?>

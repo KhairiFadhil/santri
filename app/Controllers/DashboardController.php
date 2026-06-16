@@ -10,9 +10,9 @@ class DashboardController
     {
         $userId = (int) $_SESSION['user']['id'];
 
-        $aktif = Antrian::getAntrianAktif($userId);
+        $aktif = Antrian::antrianAktif($userId);
 
-        $frontStats = $aktif ? Antrian::frontStats($aktif) : [
+        $infoAntrian = $aktif ? Antrian::infoAntrian($aktif) : [
             'ahead' => 0,
             'eta_minutes' => 0,
             'calling' => null,
@@ -23,7 +23,7 @@ class DashboardController
             'title' => 'Dashboard',
             'user'  => $_SESSION['user'],
             'aktif' => $aktif,
-            'frontStats' => $frontStats,
+            'infoAntrian' => $infoAntrian,
         ], 'main');
     }
 }

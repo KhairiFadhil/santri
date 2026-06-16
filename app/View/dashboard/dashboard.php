@@ -1,7 +1,7 @@
 <?php
 /** @var array $user */
 /** @var ?array $aktif */
-/** @var array $frontStats */
+/** @var array $infoAntrian */
 
 $status = strtolower($aktif['status'] ?? '');
 
@@ -29,7 +29,7 @@ $jenisPasien = $aktif['patient_type']
     ?? $aktif['insurance_type']
     ?? 'BPJS';
 
-$nomorDipanggil = $frontStats['calling'] ?? '-';
+$nomorDipanggil = $infoAntrian['calling'] ?? '-';
 ?>
 
 <div class="user-page dashboard-antrean-page">

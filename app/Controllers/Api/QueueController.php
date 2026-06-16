@@ -18,13 +18,13 @@ class QueueController
             return;
         }
 
-        $queue = Antrian::getAntrianAktif((int)$userId);
+        $queue = Antrian::antrianAktif((int)$userId);
         if (!$queue) {
             echo json_encode(['ok' => true, 'queue' => null]);
             return;
         }
 
-        $stats = Antrian::frontStats($queue);
+        $stats = Antrian::infoAntrian($queue);
 
         echo json_encode([
             'ok' => true,
@@ -50,7 +50,7 @@ class QueueController
         header('Cache-Control: no-store');
         echo json_encode([
             'ok'   => true,
-            'live' => Antrian::liveQueue(),
+            'live' => Antrian::antrianLive(),
         ]);
     }
 }
