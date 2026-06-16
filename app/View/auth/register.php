@@ -11,7 +11,7 @@
             <h2>Daftar sekali,<br>antre kapan saja.</h2>
             <p>Buat akun pasien untuk mengambil nomor antrean online dan memantau posisi antrean Anda.</p>
         </div>
-        <div class="auth-brand-foot">&copy; <?= date('Y') ?> <?= HOSPITAL_NAME ?> &middot; SANTRI</div>
+        <div class="auth-brand-foot">&copy; <?= date('Y') ?> RS Medicaria &middot; SANTRI</div>
         <span class="auth-blob auth-blob-1"></span>
         <span class="auth-blob auth-blob-2"></span>
     </div>

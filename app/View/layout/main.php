@@ -15,10 +15,10 @@ $isHome = rtrim($uri, '/') === rtrim(BASE_URL, '/');
         <div class="util-in">
             <div class="util-left">
                 <span class="util-dot"></span>
-                Situs Resmi RSUD <?= HOSPITAL_NAME ?>
+                Situs Resmi RS Medicaria
             </div>
             <div class="util-right">
-                <span><?= HOSPITAL_PHONE ?></span>
+                <span>(021) 5550-1234</span>
                 <span class="util-sep"></span>
                 <a href="<?= BASE_URL ?>/#lokasi">Lokasi</a>
             </div>
@@ -30,7 +30,7 @@ $isHome = rtrim($uri, '/') === rtrim(BASE_URL, '/');
                 <?php $logoSize = 38; $logoPlain = true; include __DIR__ . '/_logo.php'; ?>
                 <div class="beranda-bname">
                     <strong>SANTRI</strong>
-                    <span><?= HOSPITAL_NAME ?></span>
+                    <span>RS Medicaria</span>
                 </div>
             </a>
 
@@ -95,22 +95,22 @@ $isHome = rtrim($uri, '/') === rtrim(BASE_URL, '/');
                     <?php $logoSize = 42; include __DIR__ . '/_logo.php'; ?>
                     <div>
                         <div class="foot-brand-name">SANTRI</div>
-                        <div class="foot-brand-sub">RS <?= HOSPITAL_NAME ?></div>
+                        <div class="foot-brand-sub">RS Medicaria</div>
                     </div>
                 </div>
-                <p class="foot-desc">Sistem Antrian Rumah Sakit terintegrasi yang dikelola RS <?= HOSPITAL_NAME ?> untuk pelayanan kesehatan yang lebih cepat, tertib, dan nyaman bagi seluruh pasien.</p>
+                <p class="foot-desc">Sistem Antrian Rumah Sakit terintegrasi yang dikelola RS Medicaria untuk pelayanan kesehatan yang lebih cepat, tertib, dan nyaman bagi seluruh pasien.</p>
                 <div class="foot-contacts">
                     <div class="foot-contact">
                         <div class="foot-contact-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.2-7-11a7 7 0 0 1 14 0c0 5.8-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-                        <div><div class="foot-contact-l">Alamat</div><div class="foot-contact-v"><?= HOSPITAL_ADDRESS ?></div></div>
+                        <div><div class="foot-contact-l">Alamat</div><div class="foot-contact-v">Jl. Merpati Raya No. 14, Jakarta</div></div>
                     </div>
                     <div class="foot-contact">
                         <div class="foot-contact-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5V20a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1Z"/></svg></div>
-                        <div><div class="foot-contact-l">Halo SANTRI</div><div class="foot-contact-v"><?= HOSPITAL_PHONE ?> · 24 jam, hari kerja</div></div>
+                        <div><div class="foot-contact-l">Halo SANTRI</div><div class="foot-contact-v">(021) 5550-1234 · 24 jam, hari kerja</div></div>
                     </div>
                     <div class="foot-contact">
                         <div class="foot-contact-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
-                        <div><div class="foot-contact-l">Email Resmi</div><div class="foot-contact-v"><?= HOSPITAL_EMAIL ?></div></div>
+                        <div><div class="foot-contact-l">Email Resmi</div><div class="foot-contact-v">halo@medicaria.id</div></div>
                     </div>
                 </div>
             </div>
@@ -129,7 +129,7 @@ $isHome = rtrim($uri, '/') === rtrim(BASE_URL, '/');
         
         <div class="foot-botwrap">
             <div class="foot-bot">
-                <div class="foot-copy">&copy; <?= date('Y') ?> <strong>RS <?= HOSPITAL_NAME ?></strong> · SANTRI — Sistem Antrian Rumah Sakit. Hak cipta dilindungi.</div>
+                <div class="foot-copy">&copy; <?= date('Y') ?> <strong>RS Medicaria</strong> · SANTRI — Sistem Antrian Rumah Sakit. Hak cipta dilindungi.</div>
             </div>
         </div>
     </footer>

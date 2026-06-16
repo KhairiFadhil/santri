@@ -16,7 +16,7 @@
                 <div id="poli_waiting" class="auth-ticket-sub">Memuat antrean&hellip;</div>
             </div>
         </div>
-        <div class="auth-brand-foot">&copy; <?= date('Y') ?> <?= HOSPITAL_NAME ?> &middot; SANTRI</div>
+        <div class="auth-brand-foot">&copy; <?= date('Y') ?> RS Medicaria &middot; SANTRI</div>
         <span class="auth-blob auth-blob-1"></span>
         <span class="auth-blob auth-blob-2"></span>
     </div>

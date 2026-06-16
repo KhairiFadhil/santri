@@ -42,7 +42,7 @@ $initial = strtoupper(substr(trim($staff['name'] ?? 'A'), 0, 1));
     <aside class="admin-side">
         <div class="admin-brand">
             <?php $logoSize = 38; include __DIR__ . '/_logo.php'; ?>
-            <div class="admin-bname"><strong>SANTRI</strong><span><?= HOSPITAL_NAME ?></span></div>
+            <div class="admin-bname"><strong>SANTRI</strong><span>RS Medicaria</span></div>
         </div>
 
         <nav class="admin-nav">
