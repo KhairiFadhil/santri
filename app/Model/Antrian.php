@@ -208,6 +208,14 @@ class Antrian
         return $st->rowCount() > 0;
     }
 
+    public static function batalSemuaMenunggu(int $doctorId, string $tanggal): int
+    {
+        $st = db()->prepare("UPDATE queues SET status = 'cancel'
+            WHERE doctor_id = ? AND schedule_date = ? AND status = 'wait'");
+        $st->execute([$doctorId, $tanggal]);
+        return $st->rowCount();
+    }
+
     public static function listHariIni(?int $poliId = null, ?string $status = null, ?int $doctorId = null): array
     {
         $sql = "SELECT q.*, p.name AS poli_name, d.name AS doctor_name,

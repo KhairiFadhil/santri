@@ -1200,3 +1200,45 @@ tbody tr:hover { background: var(--surface-2); }
         font-size: 12.5px;
     }
 }
+/* cuti dokter (kolom di tabel jadwal) */
+.cuti-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.cuti-chip .btn-delete-sm {
+    background: none;
+    border: none;
+    color: #b91c1c;
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 2px;
+}
+
+.cuti-add {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.cuti-add .form-control {
+    padding: 4px 6px;
+    font-size: 12px;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+}

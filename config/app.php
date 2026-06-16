@@ -9,12 +9,18 @@ define('ANTRIAN_PERORANG',  3);
 
 define('BASE_URL', '/santri-belajar/public');
 
-function format_tanggal_id(?string $date): string
+function format_tanggal_id($date)
 {
     if (!$date) return '-';
-    $ts = strtotime($date);
-    if (!$ts) return $date;
-    $bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
     $hari  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-    return $hari[(int)date('w', $ts)] . ', ' . (int)date('j', $ts) . ' ' . $bulan[(int)date('n', $ts) - 1] . ' ' . date('Y', $ts);
+    $bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+    $ts = strtotime($date);
+    $namaHari  = $hari[date('w', $ts)];
+    $tanggal   = date('j', $ts);
+    $namaBulan = $bulan[date('n', $ts) - 1];
+    $tahun     = date('Y', $ts);
+
+    return $namaHari . ', ' . $tanggal . ' ' . $namaBulan . ' ' . $tahun;
 }

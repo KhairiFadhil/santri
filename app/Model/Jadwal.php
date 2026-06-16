@@ -34,6 +34,17 @@ class Jadwal
         return $st->execute([$dokterId, $tanggal]);
     }
 
+    public static function cutiMendatang(): array
+    {
+        $sql = "SELECT o.doctor_id, o.off_date, d.name AS doctor_name, p.name AS poli_name
+                FROM doctor_off o
+                JOIN doctors d ON d.id = o.doctor_id
+                JOIN poli p    ON p.id = d.poli_id
+                WHERE o.off_date >= CURDATE()
+                ORDER BY o.off_date, d.name";
+        return db()->query($sql)->fetchAll();
+    }
+
     public static function sisaKuota(int $dokterId, string $tanggal): array
     {
         $jadwal = self::find($dokterId, self::namaHari($tanggal));

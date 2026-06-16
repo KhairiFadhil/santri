@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use App\Core\View;
 use App\Model\Dokter;
 use App\Model\Jadwal;
+use App\Model\Antrian;
 
 class JadwalController extends \App\Core\Controller
 {
@@ -12,19 +13,55 @@ class JadwalController extends \App\Core\Controller
 
     public function index(): void
     {
+        $cutiByDokter = [];
+        foreach (Jadwal::cutiMendatang() as $c) {
+            $cutiByDokter[(int)$c['doctor_id']][] = $c['off_date'];
+        }
+
         View::render('admin/jadwal/index', [
             'grid' => $this->weeklyGrid(),
             'doctors' => Dokter::all(true),
             'days' => self::DAYS,
+            'cutiByDokter' => $cutiByDokter,
         ], 'admin');
+    }
+
+    public function setCuti(): void
+    {
+        $doctorId = (int)($_POST['doctor_id'] ?? 0);
+        $tanggal = trim($_POST['off_date'] ?? '');
+
+        if ($doctorId <= 0 || !Dokter::findById($doctorId) || $tanggal === '' || $tanggal < date('Y-m-d')) {
+            $this->flash('warn', 'Dokter dan tanggal cuti (minimal hari ini) wajib diisi.');
+            $this->redirect('/admin/jadwal');
+        }
+
+        Jadwal::setOff($doctorId, $tanggal);
+        $dibatalkan = Antrian::batalSemuaMenunggu($doctorId, $tanggal);
+
+        $this->flash('ok', "Cuti dokter ditetapkan. $dibatalkan antrean menunggu di tanggal itu dibatalkan.");
+        $this->redirect('/admin/jadwal');
+    }
+
+    public function batalCuti(): void
+    {
+        $doctorId = (int)($_POST['doctor_id'] ?? 0);
+        $tanggal = trim($_POST['off_date'] ?? '');
+
+        if ($doctorId > 0 && $tanggal !== '') {
+            Jadwal::unsetOff($doctorId, $tanggal);
+        }
+
+        $this->flash('ok', 'Cuti dokter dibatalkan.');
+        $this->redirect('/admin/jadwal');
     }
 
     public function upsert(): void
     {
         $doctorId = (int)($_POST['doctor_id'] ?? 0);
         $hari = trim($_POST['day_of_week'] ?? $_POST['hari'] ?? '');
-        $start = trim($_POST['time_start'] ?? $_POST['start'] ?? '');
-        $end = trim($_POST['time_end'] ?? $_POST['end'] ?? '');
+        $mulai = trim($_POST['time_start'] ?? $_POST['start'] ?? '');
+        $selesai = trim($_POST['time_end'] ?? $_POST['end'] ?? '');
         $capacity = (int)($_POST['capacity'] ?? 30);
 
         $errors = [];
@@ -37,11 +74,11 @@ class JadwalController extends \App\Core\Controller
             $errors[] = 'Hari tidak valid.';
         }
 
-        if (!$this->validTime($start) || !$this->validTime($end)) {
+        if (!$this->validTime($mulai) || !$this->validTime($selesai)) {
             $errors[] = 'Jam mulai dan selesai wajib format HH:MM.';
         }
 
-        if ($this->validTime($start) && $this->validTime($end) && $start >= $end) {
+        if ($this->validTime($mulai) && $this->validTime($selesai) && $mulai >= $selesai) {
             $errors[] = 'Jam selesai harus lebih besar dari jam mulai.';
         }
 
@@ -54,7 +91,7 @@ class JadwalController extends \App\Core\Controller
             $this->redirect('/admin/jadwal');
         }
 
-        Jadwal::upsert($doctorId, $hari, $start, $end, $capacity);
+        Jadwal::upsert($doctorId, $hari, $mulai, $selesai, $capacity);
 
         $this->flash('ok', 'Jadwal dokter berhasil disimpan.');
         $this->redirect('/admin/jadwal');

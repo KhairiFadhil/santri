@@ -65,6 +65,7 @@
                 <?php foreach (($days ?? []) as $day): ?>
                     <th class="text-center"><?= htmlspecialchars($day) ?></th>
                 <?php endforeach; ?>
+                <th style="min-width: 190px;">Cuti / Libur</th>
             </tr>
         </thead>
         <tbody>
@@ -95,6 +96,26 @@
                             <?php endif; ?>
                         </td>
                     <?php endforeach; ?>
+
+                    <td style="vertical-align: top;">
+                        <?php $cutiList = $cutiByDokter[$row['doctor_id']] ?? []; ?>
+                        <?php foreach ($cutiList as $tgl): ?>
+                            <div class="cuti-chip">
+                                <span><?= htmlspecialchars(format_tanggal_id($tgl)) ?></span>
+                                <form class="inline-form" action="<?= $base ?>/admin/jadwal/cuti/delete" method="post">
+                                    <input type="hidden" name="doctor_id" value="<?= $row['doctor_id'] ?>">
+                                    <input type="hidden" name="off_date" value="<?= htmlspecialchars($tgl) ?>">
+                                    <button type="submit" class="btn-delete-sm" onclick="return confirm('Batalkan cuti ini?')" title="Batalkan cuti">&times;</button>
+                                </form>
+                            </div>
+                        <?php endforeach; ?>
+
+                        <form class="cuti-add" action="<?= $base ?>/admin/jadwal/cuti" method="post">
+                            <input type="hidden" name="doctor_id" value="<?= $row['doctor_id'] ?>">
+                            <input type="date" name="off_date" class="form-control" min="<?= date('Y-m-d') ?>" required>
+                            <button type="submit" class="btn btn-primary btn-sm">Set Cuti</button>
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

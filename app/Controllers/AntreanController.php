@@ -16,33 +16,32 @@ class AntreanController extends \App\Core\Controller
             $this->redirect('/antrean');
         }
 
-        $date = $_GET['schedule_date'] ?? date('Y-m-d');
-        $today = date('Y-m-d');
-        $maxDate = date('Y-m-d', strtotime('+3 days'));
-        if ($date < $today)  $date = $today;
-        if ($date > $maxDate) $date = $maxDate;
+        $tgl = $_GET['schedule_date'] ?? date('Y-m-d');
+        $hariIni = date('Y-m-d');
+        $tglMax = date('Y-m-d', strtotime('+3 days'));
+        if ($tgl < $hariIni) $tgl = $hariIni;
+        if ($tgl > $tglMax)  $tgl = $tglMax;
 
         View::render('antrean/daftar', [
-            'doctors' => $this->doktersDenganKuota($date),
+            'doctors' => $this->dokterKuota($tgl),
             'errors'  => [],
-            'form'    => ['doctor_id' => '', 'complaint' => '', 'schedule_date' => $date],
-            'hari'    => Jadwal::namaHari($date),
+            'form'    => ['doctor_id' => '', 'complaint' => '', 'schedule_date' => $tgl],
+            'hari'    => Jadwal::namaHari($tgl),
         ], 'main');
     }
 
-    private function doktersDenganKuota(string $date): array
+    private function dokterKuota($tgl)
     {
-        $doctors = Jadwal::dokterPraktik($date);
-        foreach ($doctors as &$d) {
-            $k = Jadwal::sisaKuota((int)$d['id'], $date);
-            $d['sisa'] = $k['sisa'];
-            $d['penuh'] = $k['penuh'];
+        $listDok = Jadwal::dokterPraktik($tgl);
+        foreach ($listDok as $i => $d) {
+            $kuota = Jadwal::sisaKuota((int)$d['id'], $tgl);
+            $listDok[$i]['sisa'] = $kuota['sisa'];
+            $listDok[$i]['penuh'] = $kuota['penuh'];
         }
-        unset($d);
-        return $doctors;
+        return $listDok;
     }
 
-    public function daftarProcess(): void
+    public function prosesDaftar(): void
     {
         $userId = $_SESSION['user']['id'];
 
@@ -56,10 +55,10 @@ class AntreanController extends \App\Core\Controller
             'complaint'     => trim($_POST['complaint'] ?? ''),
         ];
 
-        $today = date('Y-m-d');
-        $maxDate = date('Y-m-d', strtotime('+3 days'));
-        if ($form['schedule_date'] < $today)  $form['schedule_date'] = $today;
-        if ($form['schedule_date'] > $maxDate) $form['schedule_date'] = $maxDate;
+        $hariIni = date('Y-m-d');
+        $tglMax = date('Y-m-d', strtotime('+3 days'));
+        if ($form['schedule_date'] < $hariIni) $form['schedule_date'] = $hariIni;
+        if ($form['schedule_date'] > $tglMax)  $form['schedule_date'] = $tglMax;
 
         $errors = [];
         $dokter = null;
@@ -69,8 +68,8 @@ class AntreanController extends \App\Core\Controller
             $errors[] = 'Pilih dokter.';
         } else {
             $dokter = Dokter::findById((int)$form['doctor_id']);
-            if (!$dokter) {
-                $errors[] = 'Dokter tidak ditemukan.';
+            if (!$dokter || !$dokter['is_active']) {
+                $errors[] = 'Dokter tidak tersedia.';
             } else {
                 $jadwal = Jadwal::find((int)$form['doctor_id'], Jadwal::namaHari($form['schedule_date']));
                 if (!$jadwal) {
@@ -83,7 +82,7 @@ class AntreanController extends \App\Core\Controller
 
         if ($errors) {
             View::render('antrean/daftar', [
-                'doctors' => $this->doktersDenganKuota($form['schedule_date']),
+                'doctors' => $this->dokterKuota($form['schedule_date']),
                 'errors'  => $errors,
                 'form'    => $form,
                 'hari'    => Jadwal::namaHari($form['schedule_date']),
@@ -104,7 +103,7 @@ class AntreanController extends \App\Core\Controller
             ]);
         } catch (\Throwable $e) {
             View::render('antrean/daftar', [
-                'doctors' => $this->doktersDenganKuota($form['schedule_date']),
+                'doctors' => $this->dokterKuota($form['schedule_date']),
                 'errors'  => [$e->getMessage()],
                 'form'    => $form,
                 'hari'    => Jadwal::namaHari($form['schedule_date']),
@@ -115,29 +114,29 @@ class AntreanController extends \App\Core\Controller
         $this->redirect('/antrean');
     }
 
-    public function status(): void
+    public function statusAntri(): void
     {
         $userId = $_SESSION['user']['id'];
         View::render('antrean/status', [
-            'antrean' => Antrian::antrianAktif($userId),
+            "antrean" => Antrian::antrianAktif($userId)
         ], 'main');
     }
 
-    public function cancel(): void
-    {
-        $userId  = $_SESSION['user']['id'];
-        $queueId = (int)($_POST['queue_id'] ?? 0);
-        if ($queueId) {
-            Antrian::batalAntrian($queueId, $userId);
-        }
-        $this->redirect('/dashboard');
+    public function batal(): void{
+        $userId = $_SESSION['user']['id'];
+        $idAntri = (int)($_POST['queue_id'] ?? 0);
+        if($idAntri > 0){
+            Antrian::batalAntrian($idAntri ,$userId);
+            }
+         $this->redirect('/dashboard');
+
     }
 
-    public function riwayat(): void
+    public function riwayat():void
     {
         $userId = $_SESSION['user']['id'];
-        View::render('antrean/riwayat', [
-            'rows' => Antrian::RiwayatUser($userId),
+        View::render('antrean/riwayat',[
+            'rows' => Antrian::RiwayatUser($userId)
         ], 'main');
     }
 }

@@ -50,7 +50,8 @@ class LoketController extends \App\Core\Controller
     {
         $doctorId = (int)($_SESSION['staff']['doctors_id'] ?? 0);
         Jadwal::setOff($doctorId, date('Y-m-d'));
-        $this->flash('success', 'Praktik hari ini ditutup. Pasien tidak bisa daftar lagi.');
+        $dibatalkan = Antrian::batalSemuaMenunggu($doctorId, date('Y-m-d'));
+        $this->flash('success', "Praktik hari ini ditutup. $dibatalkan antrean yang menunggu dibatalkan.");
         $this->redirect('/dokter/loket');
     }
 

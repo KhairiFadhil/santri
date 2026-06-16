@@ -27,8 +27,8 @@ class WalkinController extends \App\Core\Controller
 
         if (!$errors) {
             $dokter = Dokter::findById((int)$form['doctor_id']);
-            if (!$dokter) {
-                $errors[] = 'Dokter tidak ditemukan.';
+            if (!$dokter || !$dokter['is_active']) {
+                $errors[] = 'Dokter tidak tersedia.';
             }
         }
 

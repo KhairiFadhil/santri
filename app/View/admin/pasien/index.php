@@ -9,8 +9,16 @@
 
 <div class="filter-box">
     <form method="get" action="<?= $base ?>/admin/pasien">
-        <label>Cari Pasien
-            <input type="text" name="q" class="form-control" value="<?= htmlspecialchars($keyword ?? '') ?>" placeholder="Nama, NIK, email, atau nomor HP">
+        <label>Cari Berdasarkan
+            <select name="filter" class="form-control">
+                <option value="nama"  <?= ($filter ?? 'nama') === 'nama'  ? 'selected' : '' ?>>Nama</option>
+                <option value="nik"   <?= ($filter ?? '') === 'nik'   ? 'selected' : '' ?>>NIK</option>
+                <option value="email" <?= ($filter ?? '') === 'email' ? 'selected' : '' ?>>Email</option>
+                <option value="hp"    <?= ($filter ?? '') === 'hp'    ? 'selected' : '' ?>>No HP</option>
+            </select>
+        </label>
+        <label>Kata Kunci
+            <input type="text" name="q" class="form-control" value="<?= htmlspecialchars($keyword ?? '') ?>" placeholder="Ketik kata kunci...">
         </label>
         <button type="submit" class="btn btn-primary">Cari</button>
     </form>

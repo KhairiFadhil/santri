@@ -27,9 +27,9 @@
 
         'GET /dashboard'         => ['App\Controllers\DashboardController', 'index', 'auth'],
         'GET /daftar'            => ['App\Controllers\AntreanController', 'daftar', 'auth'],
-        'POST /daftar'           => ['App\Controllers\AntreanController', 'daftarProcess', 'auth'],
-        'GET /antrean'           => ['App\Controllers\AntreanController', 'status', 'auth'],
-        'POST /antrean/cancel'   => ['App\Controllers\AntreanController', 'cancel', 'auth'],
+        'POST /daftar'           => ['App\Controllers\AntreanController', 'prosesDaftar', 'auth'],
+        'GET /antrean'           => ['App\Controllers\AntreanController', 'statusAntri', 'auth'],
+        'POST /antrean/cancel'   => ['App\Controllers\AntreanController', 'batal', 'auth'],
         'GET /riwayat'           => ['App\Controllers\AntreanController', 'riwayat', 'auth'],
 
         'GET /profile'           => ['App\Controllers\ProfileController', 'index', 'auth'],
@@ -65,9 +65,11 @@
         'POST /admin/dokter/{id}/delete' => ['App\Controllers\Admin\DokterController', 'delete', 'staff'],
         'POST /admin/dokter/{id}/akun'   => ['App\Controllers\Admin\DokterController', 'akun', 'staff'],
 
-        'GET /admin/jadwal'         => ['App\Controllers\Admin\JadwalController', 'index', 'staff'],
-        'POST /admin/jadwal'        => ['App\Controllers\Admin\JadwalController', 'upsert', 'staff'],
-        'POST /admin/jadwal/delete' => ['App\Controllers\Admin\JadwalController', 'delete', 'staff'],
+        'GET /admin/jadwal'              => ['App\Controllers\Admin\JadwalController', 'index', 'staff'],
+        'POST /admin/jadwal'             => ['App\Controllers\Admin\JadwalController', 'upsert', 'staff'],
+        'POST /admin/jadwal/delete'      => ['App\Controllers\Admin\JadwalController', 'delete', 'staff'],
+        'POST /admin/jadwal/cuti'        => ['App\Controllers\Admin\JadwalController', 'setCuti', 'staff'],
+        'POST /admin/jadwal/cuti/delete' => ['App\Controllers\Admin\JadwalController', 'batalCuti', 'staff'],
 
         'GET /admin/pasien'              => ['App\Controllers\Admin\PasienController', 'index', 'staff'],
         'POST /admin/pasien/{id}/delete' => ['App\Controllers\Admin\PasienController', 'delete', 'staff'],

@@ -54,19 +54,19 @@ class ProfileController extends \App\Core\Controller
     {
         $id = $_SESSION['user']['id'] ?? null;
 
-        $current = $_POST['current_password'] ?? '';
-        $new     = $_POST['new_password']     ?? '';
-        $confirm = $_POST['confirm_password'] ?? '';
+        $lama  = $_POST['current_password'] ?? '';
+        $baru  = $_POST['new_password']     ?? '';
+        $ulang = $_POST['confirm_password'] ?? '';
 
         $user = User::findById((int)$id);
 
         $errors = [];
-        if (!$current)                                            $errors[] = 'Kata sandi saat ini wajib diisi.';
-        if (!$new)                                                $errors[] = 'Kata sandi baru wajib diisi.';
-        if (!$confirm)                                            $errors[] = 'Konfirmasi kata sandi wajib diisi.';
-        if ($new && strlen($new) < 8)                             $errors[] = 'Kata sandi baru minimal 8 karakter.';
-        if ($new && $confirm && $new !== $confirm)                $errors[] = 'Kata sandi baru dan konfirmasi tidak cocok.';
-        if ($current && !password_verify($current, $user['password_hash'])) $errors[] = 'Kata sandi saat ini salah.';
+        if (!$lama)                                            $errors[] = 'Kata sandi saat ini wajib diisi.';
+        if (!$baru)                                            $errors[] = 'Kata sandi baru wajib diisi.';
+        if (!$ulang)                                           $errors[] = 'Konfirmasi kata sandi wajib diisi.';
+        if ($baru && strlen($baru) < 8)                        $errors[] = 'Kata sandi baru minimal 8 karakter.';
+        if ($baru && $ulang && $baru !== $ulang)              $errors[] = 'Kata sandi baru dan konfirmasi tidak cocok.';
+        if ($lama && !password_verify($lama, $user['password_hash'])) $errors[] = 'Kata sandi saat ini salah.';
 
         if ($errors) {
             View::render('profile/index', [
@@ -77,7 +77,7 @@ class ProfileController extends \App\Core\Controller
             return;
         }
 
-        User::updatePassword((int)$id, $new);
+        User::updatePassword((int)$id, $baru);
 
         $this->flash('ok', 'Kata sandi berhasil diganti.');
         $this->redirect('/profile');

@@ -9,11 +9,13 @@ class PasienController extends \App\Core\Controller
 {
     public function index(): void
     {
-        $keyword = trim($_GET['q'] ?? '');
+        $filter = $_GET['filter'] ?? 'nama';
+        $cari   = trim($_GET['q'] ?? '');
 
         View::render('admin/pasien/index', [
-            'rows' => $keyword === '' ? User::all(200) : $this->search($keyword),
-            'keyword' => $keyword,
+            'rows'    => $cari === '' ? User::all(200) : $this->cariPasien($filter, $cari),
+            'filter'  => $filter,
+            'keyword' => $cari,
         ], 'admin');
     }
 
@@ -32,14 +34,18 @@ class PasienController extends \App\Core\Controller
         $this->redirect('/admin/pasien');
     }
 
-    private function search(string $keyword): array
+    private function cariPasien($filter, $cari): array
     {
-        $like = '%' . $keyword . '%';
-        $st = db()->prepare('SELECT * FROM users
-                             WHERE name LIKE ? OR nik LIKE ? OR email LIKE ? OR phone LIKE ?
-                             ORDER BY created_at DESC
-                             LIMIT 200');
-        $st->execute([$like, $like, $like, $like]);
+        $kolom = [
+            'nama'  => 'name',
+            'nik'   => 'nik',
+            'email' => 'email',
+            'hp'    => 'phone',
+        ];
+        $kol = $kolom[$filter] ?? 'name';
+
+        $st = db()->prepare("SELECT * FROM users WHERE $kol LIKE ? ORDER BY created_at DESC LIMIT 200");
+        $st->execute(['%' . $cari . '%']);
 
         return $st->fetchAll();
     }

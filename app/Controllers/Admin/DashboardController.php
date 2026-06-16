@@ -40,8 +40,8 @@ class DashboardController
 
     private function countTable(string $table): int
     {
-        $allowed = ['users', 'staff', 'poli', 'doctors', 'queues'];
-        if (!in_array($table, $allowed, true)) {
+        $boleh = ['users', 'staff', 'poli', 'doctors', 'queues'];
+        if (!in_array($table, $boleh, true)) {
             return 0;
         }
 

@@ -74,9 +74,9 @@ class PoliController extends \App\Core\Controller
 
         $form = $this->formFromPost();
         $errors = $this->validate($form);
-        $sameCode = Poli::findByCode($form['code']);
+        $kodeSama = Poli::findByCode($form['code']);
 
-        if (!$errors && $sameCode && (int)$sameCode['id'] !== $id) {
+        if (!$errors && $kodeSama && (int)$kodeSama['id'] !== $id) {
             $errors[] = 'Kode poli sudah digunakan.';
         }
 

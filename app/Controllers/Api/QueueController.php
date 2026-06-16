@@ -24,7 +24,7 @@ class QueueController
             return;
         }
 
-        $stats = Antrian::infoAntrian($queue);
+        $info = Antrian::infoAntrian($queue);
 
         echo json_encode([
             'ok' => true,
@@ -36,10 +36,10 @@ class QueueController
                 'status'         => $queue['status'],
                 'poli_name'      => $queue['poli_name'],
                 'doctor_name'    => $queue['doctor_name'],
-                'ahead'          => (int)$stats['ahead'],
-                'eta_minutes'    => (int)$stats['eta_minutes'],
-                'calling'        => $stats['calling'],
-                'calling_number' => (int)$stats['calling_number'],
+                'ahead'          => (int)$info['ahead'],
+                'eta_minutes'    => (int)$info['eta_minutes'],
+                'calling'        => $info['calling'],
+                'calling_number' => (int)$info['calling_number'],
             ],
         ]);
     }

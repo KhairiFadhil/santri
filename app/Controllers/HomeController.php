@@ -1,19 +1,20 @@
 <?php
-    namespace App\Controllers;
 
-    use App\Core\View;
-    use App\Model\Poli;
-    use App\Model\Antrian;
-    class HomeController
+namespace App\Controllers;
+
+use App\Core\View;
+use App\Model\Antrian;
+use App\Model\Poli;
+
+class HomeController extends \App\Core\Controller
+{
+    public function index(): void
     {
-        public function index()
-        {
-            $poli = Poli::all(true);
-            $live = Antrian::antrianLive();
-
-            View::render('home/index', [
-                "poli" => $poli,
-                "live" => $live,
-            ], 'main');
-        }
+        $live = Antrian::antrianLive();
+        $poli = Poli::all(true);
+        View::render('home/index', [
+            'poli' => $poli,
+            'live' => $live,
+        ], 'main');
     }
+}
